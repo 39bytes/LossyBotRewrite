@@ -1,0 +1,4 @@
+﻿-Now uses JSON instead of XML
+-YAML Configuration File
+-Dependancy Injection
+-Cleaner file organisation
