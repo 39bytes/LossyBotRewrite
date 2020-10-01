@@ -43,7 +43,7 @@ namespace LossyBotRewrite
             {
                 img.Write(stream, MagickFormat.Jpg);
                 stream.Position = 0;
-                await Context.Channel.SendFileAsync(stream, "image.jpg");
+                await Context.Channel.SendFileAsync(stream, "lossyimage.jpg");
             }
         }
 
@@ -66,6 +66,29 @@ namespace LossyBotRewrite
         public MagickImage Edge(MagickImage image)
         {
             image.Edge(3);
+            return image;
+        }
+        
+        public MagickImage Wave(MagickImage image)
+        {
+            image.Wave();
+            return image;
+        }
+        
+        public MagickImage Deepfry(MagickImage image)
+        {
+            image.Resize((Percentage)50);
+            image.AddNoise(NoiseType.MultiplicativeGaussian);
+            image.Modulate((Percentage)100, (Percentage)300, (Percentage)100);
+            image.Implode(-1, PixelInterpolateMethod.Average);
+            image.Resize((Percentage)200);
+            
+            return image;
+        }
+        
+        public MagickImage Jpgify(MagickImage image)
+        {
+            image.Quality = 5;
             return image;
         }
     }
