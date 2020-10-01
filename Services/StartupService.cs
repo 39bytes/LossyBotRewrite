@@ -53,10 +53,11 @@ namespace LossyBotRewrite
             if (!Directory.Exists(Globals.path))
                 Directory.CreateDirectory(Globals.path);
 
-            if (!File.Exists($"{Globals.path}{Path.DirectorySeparatorChar}Servers.xml"))
+            //---Servers.xml---
+            if (!File.Exists($"{Globals.path}Servers.xml"))
                 CreateEmptyXML("Servers.xml");
 
-            string serversPath = $"{Globals.path}{Path.DirectorySeparatorChar}Servers.xml";
+            string serversPath = $"{Globals.path}Servers.xml";
 
             XDocument xml = XDocument.Load(serversPath);
 
@@ -72,6 +73,19 @@ namespace LossyBotRewrite
             }
 
             xml.Save(serversPath);
+            //-------------
+
+            List<string> filenames = new List<string>()
+            {
+                "profiles.xml"
+            };
+
+            foreach(string file in filenames)
+            {
+                if (!File.Exists(Globals.path + file))
+                    CreateEmptyXML(file);
+            }
+
         }
 
         private async Task OnReady()
@@ -82,7 +96,7 @@ namespace LossyBotRewrite
 
         private void CreateEmptyXML(string name)
         {
-            using (StreamWriter sw = File.CreateText($"{Globals.path}{Path.DirectorySeparatorChar}{name}"))
+            using (StreamWriter sw = File.CreateText($"{Globals.path}{name}"))
             {
                 sw.WriteLine("<root></root>");
             }
