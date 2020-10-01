@@ -21,13 +21,16 @@ namespace LossyBotRewrite
             string url = args.Last();
             Array.Resize(ref args, args.Length - 1); //remove the last element
 
+            //Stopwatch watch = new Stopwatch();
+            //watch.Start();
+
             List<MethodInfo> effects = new List<MethodInfo>();
             ImageEffects ie = new ImageEffects();
             Type type = ie.GetType();
 
             foreach (string effect in args)
             {
-                effects.Add(type.GetMethod(effect, BindingFlags.IgnoreCase));
+                effects.Add(type.GetMethod(effect, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance));
             }
 
             byte[] data = await DownloadImage(url);
@@ -36,7 +39,7 @@ namespace LossyBotRewrite
 
             foreach(var method in effects)
             {
-                img = (MagickImage)method.Invoke(ie, new MagickImage[] { img });
+                img = (MagickImage)method.Invoke(ie, new object[] { img });
             }
             
             using (var stream = new MemoryStream())
@@ -45,6 +48,11 @@ namespace LossyBotRewrite
                 stream.Position = 0;
                 await Context.Channel.SendFileAsync(stream, "lossyimage.jpg");
             }
+
+            img.Dispose();
+
+            //watch.Stop();
+            //Console.WriteLine(watch.ElapsedMilliseconds);
         }
 
         private async Task<byte[]> DownloadImage(string url)
@@ -80,7 +88,6 @@ namespace LossyBotRewrite
             image.Resize((Percentage)50);
             image.AddNoise(NoiseType.MultiplicativeGaussian);
             image.Modulate((Percentage)100, (Percentage)300, (Percentage)100);
-            image.Implode(-1, PixelInterpolateMethod.Average);
             image.Resize((Percentage)200);
             
             return image;
@@ -89,6 +96,50 @@ namespace LossyBotRewrite
         public MagickImage Jpgify(MagickImage image)
         {
             image.Quality = 5;
+            return image;
+        }
+
+        public MagickImage Waaw(MagickImage image)
+        {
+            MagickImage clone = new MagickImage(image);
+            clone.Flop();
+            clone.Extent(clone.Width / 2, clone.Height);
+            image.Composite(clone, CompositeOperator.Over);
+
+            clone.Dispose();
+            return image;
+        }
+
+        public MagickImage Haah(MagickImage image)
+        {
+            MagickImage clone = new MagickImage(image);
+            clone.Flip();
+            clone.Extent(clone.Width, clone.Height / 2);
+            image.Composite(clone, CompositeOperator.Over);
+
+            clone.Dispose();
+
+            return image;
+        }
+
+        public MagickImage Contrast(MagickImage image)
+        {
+            image.BrightnessContrast((Percentage)40, (Percentage)75);
+
+            return image;
+        }
+
+        public MagickImage Negate(MagickImage image)
+        {
+            image.Negate();
+
+            return image;
+        }
+
+        public MagickImage Bulge(MagickImage image)
+        {
+            image.Implode(-1, PixelInterpolateMethod.Average);
+
             return image;
         }
     }
