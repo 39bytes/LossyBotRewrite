@@ -62,5 +62,11 @@ namespace LossyBotRewrite
             image.Resize(new Percentage(135), new Percentage(135));
             return image;
         }
+        
+        public MagickImage Edge(MagickImage image)
+        {
+            image.Edge(3);
+            return image;
+        }
     }
 }
