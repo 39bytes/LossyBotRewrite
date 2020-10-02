@@ -34,7 +34,7 @@ namespace LossyBotRewrite
         }
 
         [Command("random")]
-        public async Task random(string input)
+        public async Task Random(string input)
         {
             Random rand = new Random();
             string[] list;
