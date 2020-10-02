@@ -44,9 +44,7 @@ namespace LossyBotRewrite
             try
             {
                 XDocument doc = XDocument.Load(Globals.path + "profiles.xml");
-
                 doc.Root.Descendants().Where(x => x.Attribute("id").Value == Context.User.Id.ToString()).First().Element(field).SetValue(value);
-
                 doc.Save(Globals.path + "profiles.xml");
 
                 await ReplyAsync(Context.User.Mention, false, GetProfile(Context.User).Build());
