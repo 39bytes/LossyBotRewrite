@@ -84,7 +84,7 @@ namespace LossyBotRewrite
             foreach (string i in elementNames)
             {
                 master += $"**{i.ToUpper()}**: "; //add the element name to the master string
-                master += doc.Root.Elements("profile").Where(x => x.Attribute("id").Value == user.Id.ToString()).First().Descendants(i).First().Value;
+                master += doc.Root.Elements("profile").Where(x => x.Attribute("id").Value == user.Id.ToString()).First().Element(i).Value;
                 master += "\n"; //add a new line
             }
 

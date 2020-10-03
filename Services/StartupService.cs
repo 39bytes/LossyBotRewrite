@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using Tweetinvi;
 
 namespace LossyBotRewrite
 {
@@ -42,6 +43,8 @@ namespace LossyBotRewrite
 
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
+
+            TwitterAuthenticate();
 
 
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider); // Load commands and modules into the command service
@@ -100,6 +103,11 @@ namespace LossyBotRewrite
             {
                 sw.WriteLine("<root></root>");
             }
+        }
+
+        private void TwitterAuthenticate()
+        {
+            Auth.SetUserCredentials(_config["tokens:twitter:api"], _config["tokens:twitter:apiSecret"], _config["tokens:twitter:token"], _config["tokens:twitter:tokenSecret"]);
         }
     }
 }
