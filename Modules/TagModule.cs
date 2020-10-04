@@ -13,12 +13,7 @@ namespace LossyBotRewrite
     [Group("tag")]
     public class TagModule : ModuleBase<SocketCommandContext>
     {
-        XDocument doc;
-
-        public TagModule()
-        {
-            doc = XDocument.Load(Globals.path + "tags.xml");
-        }
+        XDocument doc = XDocument.Load(Globals.path + "tags.xml");
 
         [Command("view")]
         public async Task TagView([Remainder] string name)

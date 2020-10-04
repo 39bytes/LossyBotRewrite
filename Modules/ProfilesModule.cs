@@ -15,6 +15,8 @@ namespace LossyBotRewrite
     {
         private readonly string[] elementNames = { "fc", "sz", "tc", "rm", "cb", "main", "other" };
 
+        private XDocument doc = XDocument.Load(Globals.path + "profiles.xml");
+
         [Command]
         public async Task ProfileView() //profile without user tagged, grabs own profile
         {
@@ -43,7 +45,6 @@ namespace LossyBotRewrite
             }
             try
             {
-                XDocument doc = XDocument.Load(Globals.path + "profiles.xml");
                 doc.Root.Descendants().Where(x => x.Attribute("id").Value == Context.User.Id.ToString()).First().Element(field).SetValue(value);
                 doc.Save(Globals.path + "profiles.xml");
 
@@ -57,8 +58,6 @@ namespace LossyBotRewrite
 
         private void CheckProfile(string userId)
         {
-            XDocument doc = XDocument.Load(Globals.path + "profiles.xml");
-            
             var elements = from p in doc.Root.Descendants("profile") where (p.Attribute("id").Value == userId) select p;
             if(elements.Any()) return;
             
@@ -74,7 +73,6 @@ namespace LossyBotRewrite
         private EmbedBuilder GetProfile(SocketUser user)
         {
             EmbedBuilder builder = new EmbedBuilder();
-            XDocument doc = XDocument.Load(Globals.path + "profiles.xml");
             
             //straightforward
             builder.WithThumbnailUrl(user.GetAvatarUrl());
@@ -92,8 +90,5 @@ namespace LossyBotRewrite
 
             return builder;
         }
-
-
-        
     }
 }
