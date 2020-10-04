@@ -80,7 +80,8 @@ namespace LossyBotRewrite
 
             List<string> filenames = new List<string>()
             {
-                "profiles.xml"
+                "profiles.xml",
+                "tags.xml"
             };
 
             foreach(string file in filenames)

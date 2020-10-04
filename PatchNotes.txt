@@ -1,5 +1,7 @@
 -YAML Configuration File
--Dependancy Injection
+-Dependancy Injection for the discord part
 -Cleaner file organisation
 -Image module is way faster
 -Cleaner code
+-Tweet search removed
+-Weapon search removed
