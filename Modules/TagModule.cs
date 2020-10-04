@@ -13,9 +13,14 @@ namespace LossyBotRewrite
     [Group("tag")]
     public class TagModule : ModuleBase<SocketCommandContext>
     {
-        XDocument doc = XDocument.Load(Globals.path + "tags.xml");
+        XDocument doc;
 
-        [Command]
+        public TagModule()
+        {
+            doc = XDocument.Load(Globals.path + "tags.xml");
+        }
+
+        [Command("view")]
         public async Task TagView([Remainder] string name)
         {
             CheckServer(Context.Guild.Id);
@@ -28,7 +33,7 @@ namespace LossyBotRewrite
             }
 
             tag.SetAttributeValue("uses", int.Parse(tag.Attribute("uses").Value) + 1);
-            await ReplyAsync($"{Context.User.Mention} {tag.Attribute("content")}");
+            await ReplyAsync($"{Context.User.Mention} {tag.Attribute("content").Value}");
 
             doc.Save(Globals.path + "tags.xml");
         }
@@ -57,7 +62,7 @@ namespace LossyBotRewrite
         }
         
         [Command("delete")]
-        public async Task DeleteTag(string name)
+        public async Task DeleteTag([Remainder] string name)
         {
             CheckServer(Context.Guild.Id);
 
@@ -90,9 +95,9 @@ namespace LossyBotRewrite
             EmbedBuilder builder = new EmbedBuilder();
 
             builder.AddField("Name", name);
-            builder.AddField("Author", tag.Attribute("author"));
-            builder.AddField("Uses", tag.Attribute("uses"));
-            builder.AddField("Date", tag.Attribute("date"));
+            builder.AddField("Author", Context.Client.GetUser(ulong.Parse(tag.Attribute("author").Value)).Mention);
+            builder.AddField("Uses", tag.Attribute("uses").Value);
+            builder.AddField("Date", tag.Attribute("date").Value);
             builder.WithColor(Color.Green);
 
             await ReplyAsync("", false, builder.Build());
@@ -157,7 +162,7 @@ namespace LossyBotRewrite
 
             if (server == null)
             {
-                doc.Root.Add(new XElement("server"), new XAttribute("id", serverId));
+                doc.Root.Add(new XElement("server", new XAttribute("id", serverId)));
                 doc.Save(Globals.path + "tags.xml");
             }
         }

@@ -41,22 +41,22 @@ namespace LossyBotRewrite
             if (string.IsNullOrWhiteSpace(token))
                 throw new Exception("Enter your bot's token into config.yml in the root directory.");
 
+            SetUpFilesystem();
+
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
 
             TwitterAuthenticate();
 
-
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider); // Load commands and modules into the command service
         }
 
-        private void SetUpFilesystem()
+        private void SetUpServersXML()
         {
             Console.WriteLine("Setting up filesystem...");
             if (!Directory.Exists(Globals.path))
                 Directory.CreateDirectory(Globals.path);
 
-            //---Servers.xml---
             if (!File.Exists($"{Globals.path}Servers.xml"))
                 CreateEmptyXML("Servers.xml");
 
@@ -76,25 +76,26 @@ namespace LossyBotRewrite
             }
 
             xml.Save(serversPath);
-            //-------------
+        }
 
+        private void SetUpFilesystem()
+        {
             List<string> filenames = new List<string>()
             {
                 "profiles.xml",
                 "tags.xml"
             };
 
-            foreach(string file in filenames)
+            foreach (string file in filenames)
             {
                 if (!File.Exists(Globals.path + file))
                     CreateEmptyXML(file);
             }
-
         }
 
         private async Task OnReady()
         {
-            SetUpFilesystem();
+            SetUpServersXML();
             await Task.CompletedTask;
         }
 
