@@ -9,7 +9,6 @@ using System.IO;
 using System.Net;
 using System.Diagnostics;
 using System.Reflection;
-using YamlDotNet.Serialization.ObjectGraphVisitors;
 
 namespace LossyBotRewrite
 {
@@ -21,9 +20,6 @@ namespace LossyBotRewrite
         {
             string url = args.Last();
             Array.Resize(ref args, args.Length - 1); //remove the last element
-
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
 
             byte[] data = await DownloadImage(url);
 
@@ -82,13 +78,10 @@ namespace LossyBotRewrite
             using (var stream = new MemoryStream())
             {
                 img.Write(stream);
+                var im = new MagickImage();
                 stream.Position = 0;
                 await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
             }
-
-            watch.Stop();
-
-            Console.WriteLine(watch.ElapsedMilliseconds);
         }
 
         private async Task<byte[]> DownloadImage(string url)

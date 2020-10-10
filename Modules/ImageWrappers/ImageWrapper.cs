@@ -5,13 +5,16 @@ using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ImageMagick;
+using ImageMagick.Defines;
+using ImageMagick.Formats.Jpeg;
+using ImageMagick.ImageOptimizers;
 
 namespace LossyBotRewrite
 {
     public class ImageWrapper : IImageWrapper
     {
         public MagickImage image;
-        public readonly MagickFormat defaultFormat = MagickFormat.Jpg;
+        public readonly MagickFormat defaultFormat = MagickFormat.Png;
 
         const int defaultFrameCount = 21;
 
