@@ -1,27 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using ImageMagick;
-using ImageMagick.Defines;
-using ImageMagick.Formats.Jpeg;
-using ImageMagick.ImageOptimizers;
 
 namespace LossyBotRewrite
 {
     public class ImageWrapper : IImageWrapper
     {
         public MagickImage image;
-        public readonly MagickFormat defaultFormat = MagickFormat.Png;
-
-        const int defaultFrameCount = 21;
+        public static MagickFormat defaultFormat = MagickFormat.Jpg;
 
         public ImageWrapper(byte[] data)
         {
             image = new MagickImage(data);
-            image.Resize(new Percentage(75));
+            image.Resize((Percentage)75);
         }
 
         #region Effects
@@ -66,8 +58,8 @@ namespace LossyBotRewrite
 
         public void Magik()
         {
-            image.LiquidRescale(new Percentage(65), new Percentage(65));
-            image.Resize(new Percentage(135), new Percentage(135));
+            image.LiquidRescale((Percentage)65, (Percentage)65);
+            image.Resize((Percentage)135, (Percentage)135);
         }
 
         public void Negate()
@@ -92,49 +84,58 @@ namespace LossyBotRewrite
         //Gif effects return a new object
         public IImageWrapper Angry()
         {
-            throw new NotImplementedException();
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Angry();
         }
 
         public IImageWrapper Dance()
         {
-            throw new NotImplementedException();
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Dance();
         }
 
         public IImageWrapper Drift()
         {
-            throw new NotImplementedException();
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Drift();
         }
 
         public IImageWrapper Expand()
         {
-            throw new NotImplementedException();
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Expand();
         }
 
         public IImageWrapper Explode()
         {
-            throw new NotImplementedException();
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Explode();
         }
 
         public IImageWrapper Implode()
         {
-            MagickImageCollection collection = new MagickImageCollection();
-            for (int i = defaultFrameCount - 1; i >= 0; i--)
-            {
-                var copy = new MagickImage(image);
-                copy.Implode((double)i / 8, PixelInterpolateMethod.Average);
-                collection.Add(copy);
-            }
-            return new GifWrapper(collection);
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Implode();
         }
 
         public IImageWrapper Lsd()
         {
-            throw new NotImplementedException();
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Lsd();
         }
 
         public IImageWrapper Spectrum()
         {
-            throw new NotImplementedException();
+            var gif = new GifWrapper(image);
+            image.Dispose();
+            return gif.Spectrum();
         }
         #endregion
         public void Dispose()
