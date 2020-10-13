@@ -126,6 +126,11 @@ namespace LossyBotRewrite
                 image[i].Wave();
             }
         }
+
+        public void Text(string topText, string bottomText)
+        {
+
+        }
         #endregion
 
         public IImageWrapper Angry()

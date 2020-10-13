@@ -41,7 +41,7 @@ namespace LossyBotRewrite
             return data;
         }
 
-        public async Task<IImageWrapper> ProcessImageAsync(string url, string[] args)
+        private async Task<IImageWrapper> ProcessImageAsync(string url, string[] args)
         {
             IImageWrapper img;
 
@@ -49,6 +49,12 @@ namespace LossyBotRewrite
                 img = new GifWrapper(await DownloadImageAsync(url));
             else
                 img = new ImageWrapper(await DownloadImageAsync(url));
+
+            if (args[0].ToLower() == "text")
+            {
+                img.Text(args[1], args[2]);
+                return img;
+            }
 
             foreach (var effect in args)
             {
@@ -114,7 +120,6 @@ namespace LossyBotRewrite
                         throw new Exception("Invalid effect");
                 }
             }
-
             return img;
         }
     }

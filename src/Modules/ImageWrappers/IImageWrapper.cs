@@ -16,6 +16,7 @@ namespace LossyBotRewrite
         public void Contrast();
         public void Negate();
         public void Bulge();
+        public void Text(string topText, string bottomText); 
         public IImageWrapper Expand();
         public IImageWrapper Drift();
         public IImageWrapper Implode();
@@ -26,6 +27,7 @@ namespace LossyBotRewrite
         public IImageWrapper Lsd();
 
         public void Dispose();
+
         public void Write(MemoryStream stream);
 
         public void Write();

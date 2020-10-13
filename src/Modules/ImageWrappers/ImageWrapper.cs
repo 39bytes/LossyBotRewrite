@@ -81,6 +81,19 @@ namespace LossyBotRewrite
         {
             image.Wave();
         }
+        public void Text(string topText, string bottomText)
+        {
+            new Drawables()
+                .FontPointSize((image.Width < topText.Length * 36) ? ((image.Width / topText.Length) / (image.Settings.Density.X / 72)) : 36) //how do i do this
+                .Font("Impact", FontStyleType.Italic, FontWeight.Bold, FontStretch.ExtraExpanded)
+                .StrokeColor(MagickColors.Black)
+                .BorderColor(MagickColors.Black)
+                .FillColor(MagickColors.White)
+                .TextAlignment(TextAlignment.Center)
+                .Text(image.Width / 2, 50, topText)
+                .Draw(image);
+        }
+
         //Gif effects return a new object
         public IImageWrapper Angry()
         {
