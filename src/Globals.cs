@@ -9,7 +9,7 @@ namespace LossyBotRewrite
 {
     public static class Globals
     {
-        public static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "lossy" + Path.DirectorySeparatorChar;
+        public const string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "lossy" + Path.DirectorySeparatorChar;
 
         public static HttpClient httpClient = new HttpClient();
     }
