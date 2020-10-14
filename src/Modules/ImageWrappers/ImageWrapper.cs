@@ -92,6 +92,25 @@ namespace LossyBotRewrite
                 .TextAlignment(TextAlignment.Center)
                 .Text(image.Width / 2, 50, topText)
                 .Draw(image);
+            
+            var readSettings = new MagickReadSettings
+            {
+                StrokeColor = MagickColors.Black,
+                FillColor = MagickColors.White,
+                BackgroundColor = MagickColors.Transparent,
+                FontFamily = "Impact",
+                TextGravity = Gravity.Center,
+                Width = Image.Width,
+                Height = Image.Height / 5
+            };
+            
+            image.Alpha(AlphaOption.Opaque);
+            
+            using (var label = new MagickImage($"caption:{topText}", readSettings)
+            {
+                image.Composite(label, 0, 0, CompositeSetting.Over);
+            }
+            
         }
 
         //Gif effects return a new object
