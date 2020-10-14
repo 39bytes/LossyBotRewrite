@@ -106,9 +106,14 @@ namespace LossyBotRewrite
             
             image.Alpha(AlphaOption.Opaque);
             
-            using (var label = new MagickImage($"caption:{topText}", readSettings)
+            using (var top = new MagickImage($"caption:{topText}", readSettings)
             {
-                image.Composite(label, 0, 0, CompositeSetting.Over);
+                image.Composite(top, 0, 0, CompositeSetting.Over);
+            }
+            
+            using (var bottom = new MagickImage($"caption:{bottomText}", readSettings)
+            {
+                image.Composite(bottom, 0, image.Height - readSettings.Height, CompositeSetting.Over);
             }
             
         }
