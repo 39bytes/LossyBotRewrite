@@ -30,9 +30,9 @@ namespace LossyBotRewrite
         private EmbedBuilder GetVideoEmbed(Video video)
         {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.WithTitle("Added song to queue!");
+            builder.WithTitle(":musical_note: Added song to queue!");
             builder.AddField(video.Title, $"**By:** {video.Author}\n**Length:** {video.Duration.ToString().Substring(3)}");
-            builder.WithThumbnailUrl(video.Thumbnails.LowResUrl);
+            builder.WithThumbnailUrl(video.Thumbnails.MediumResUrl);
             return builder;
         }
     }
