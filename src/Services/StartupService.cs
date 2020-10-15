@@ -58,7 +58,10 @@ namespace LossyBotRewrite
                 Directory.CreateDirectory(Globals.path);
 
             if (!File.Exists($"{Globals.path}Servers.xml"))
+            {
                 CreateEmptyXML("Servers.xml");
+                Console.WriteLine("Created Servers.xml");
+            }
 
             string serversPath = $"{Globals.path}Servers.xml";
 
@@ -89,7 +92,11 @@ namespace LossyBotRewrite
             foreach (string file in filenames)
             {
                 if (!File.Exists(Globals.path + file))
+                {
                     CreateEmptyXML(file);
+                    Console.WriteLine("Created " + file);
+                }
+                
             }
         }
 
