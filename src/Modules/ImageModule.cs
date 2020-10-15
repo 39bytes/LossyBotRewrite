@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using System.Diagnostics;
 using System.Reflection;
+using Discord;
 
 namespace LossyBotRewrite
 {
@@ -19,7 +20,25 @@ namespace LossyBotRewrite
         public async Task ImageCommand(params string[] args)
         {
             string url = args.Last();
-            Array.Resize(ref args, args.Length - 1); //remove the last element
+            if (url.Contains("http"))
+            {
+                Array.Resize(ref args, args.Length - 1); //remove the last element
+            }
+            else if (Context.Message.Attachments.Count == 1)
+            {
+                url = Context.Message.Attachments.First().Url;
+            }
+            else
+            {
+                var messages = await Context.Channel.GetMessagesAsync(20).FlattenAsync();
+                var lastAttachments = messages.Where(x => x.Attachments.Count == 1);
+                if(!lastAttachments.Any())
+                {
+                    await ReplyAsync("`No images found in the last 20 messages.`");
+                    return;
+                }
+                url = lastAttachments.First().Attachments.First().Url;
+            }
 
             Stopwatch watch = new Stopwatch();
             watch.Start();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using YoutubeExplode;
+using YoutubeExplode.Videos;
 
 namespace LossyBotRewrite
 {
@@ -22,6 +23,17 @@ namespace LossyBotRewrite
 
             var client = new YoutubeClient();
             var info = await client.Videos.GetAsync(url);
+
+            await ReplyAsync("", false, GetVideoEmbed(info).Build());
+        }
+
+        private EmbedBuilder GetVideoEmbed(Video video)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.WithTitle("Added song to queue!");
+            builder.AddField(video.Title, $"**By:** {video.Author}\n**Length:** {video.Duration.ToString().Substring(3)}");
+            builder.WithThumbnailUrl(video.Thumbnails.LowResUrl);
+            return builder;
         }
     }
 }

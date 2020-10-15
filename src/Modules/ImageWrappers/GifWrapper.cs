@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using ImageMagick;
+using ImageMagick.Formats.Caption;
 
 namespace LossyBotRewrite
 {
@@ -129,7 +130,39 @@ namespace LossyBotRewrite
 
         public void Text(string topText, string bottomText)
         {
+            var readSettings = new MagickReadSettings
+            {
+                StrokeColor = MagickColors.Black,
+                StrokeWidth = 1.5,
+                FillColor = MagickColors.White,
+                BackgroundColor = MagickColors.Transparent,
+                FontFamily = "Impact",
+                TextGravity = Gravity.North,
+                Width = image[0].Width,
+                Height = image[0].Height / 3,
+                Defines = new CaptionReadDefines()
+                {
+                    MaxFontPointsize = (topText.Length >= 20) ? 36 : 45
+                }
+            };
+            
+            using (var top = new MagickImage($"caption:{topText}", readSettings))
+            {
+                for (int i = 0; i < image.Count; i++)
+                {
+                    image[i].Alpha(AlphaOption.Opaque);
+                    image[i].Composite(top, 0, 0, CompositeOperator.Over);
+                }
+            }
 
+            readSettings.TextGravity = Gravity.South;
+            using (var bottom = new MagickImage($"caption:{bottomText}", readSettings))
+            {
+                for (int i = 0; i < image.Count; i++)
+                {
+                    image[i].Composite(bottom, 0, image[0].Height - (int)readSettings.Height, CompositeOperator.Over);
+                }
+            }
         }
         #endregion
 

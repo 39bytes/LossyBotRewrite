@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ImageMagick;
+using ImageMagick.Formats.Caption;
 
 namespace LossyBotRewrite
 {
@@ -13,7 +14,6 @@ namespace LossyBotRewrite
         public ImageWrapper(byte[] data)
         {
             image = new MagickImage(data);
-            image.Resize((Percentage)75);
         }
 
         #region Effects
@@ -81,41 +81,37 @@ namespace LossyBotRewrite
         {
             image.Wave();
         }
+
         public void Text(string topText, string bottomText)
         {
-            new Drawables()
-                .FontPointSize((image.Width < topText.Length * 36) ? ((image.Width / topText.Length) / (image.Settings.Density.X / 72)) : 36) //how do i do this
-                .Font("Impact", FontStyleType.Italic, FontWeight.Bold, FontStretch.ExtraExpanded)
-                .StrokeColor(MagickColors.Black)
-                .BorderColor(MagickColors.Black)
-                .FillColor(MagickColors.White)
-                .TextAlignment(TextAlignment.Center)
-                .Text(image.Width / 2, 50, topText)
-                .Draw(image);
-            
             var readSettings = new MagickReadSettings
             {
                 StrokeColor = MagickColors.Black,
+                StrokeWidth = 1.5,
                 FillColor = MagickColors.White,
                 BackgroundColor = MagickColors.Transparent,
                 FontFamily = "Impact",
-                TextGravity = Gravity.Center,
-                Width = Image.Width,
-                Height = Image.Height / 5
+                TextGravity = Gravity.North,
+                Width = image.Width,
+                Height = image.Height / 3,
+                Defines = new CaptionReadDefines()
+                {
+                    MaxFontPointsize = (topText.Length >= 20) ? 36 : 45
+                }
             };
-            
+
             image.Alpha(AlphaOption.Opaque);
-            
-            using (var top = new MagickImage($"caption:{topText}", readSettings)
+
+            using (var top = new MagickImage($"caption:{topText}", readSettings))
             {
-                image.Composite(top, 0, 0, CompositeSetting.Over);
+                image.Composite(top, 0, 0, CompositeOperator.Over);
             }
-            
-            using (var bottom = new MagickImage($"caption:{bottomText}", readSettings)
+            readSettings.TextGravity = Gravity.South;
+            using (var bottom = new MagickImage($"caption:{bottomText}", readSettings))
             {
-                image.Composite(bottom, 0, image.Height - readSettings.Height, CompositeSetting.Over);
+                image.Composite(bottom, 0, image.Height - (int)readSettings.Height, CompositeOperator.Over);
             }
-            
+
         }
 
         //Gif effects return a new object
