@@ -12,6 +12,13 @@ namespace LossyBotRewrite
     [Group("voice")]
     public class VoiceModule : ModuleBase<SocketCommandContext>
     {
+        private readonly VoiceServiceManager _voiceManager;
+
+        public VoiceModule(VoiceServiceManager manager)
+        {
+            _voiceManager = manager;
+        }
+
         [Command("play")]
         public async Task VoicePlay(string url)
         {
@@ -23,8 +30,16 @@ namespace LossyBotRewrite
 
             var client = new YoutubeClient();
             var info = await client.Videos.GetAsync(url);
-
             await ReplyAsync("", false, GetVideoEmbed(info).Build());
+
+            if (_voiceManager.HasActiveService(Context.Guild.Id))
+            {
+                _voiceManager.AddVideoToServiceQueue(Context.Guild.Id, info.Id);
+            }
+            else
+            {
+                await _voiceManager.CreateVoiceService((Context.User as IGuildUser).VoiceChannel, info);
+            }
         }
 
         private EmbedBuilder GetVideoEmbed(Video video)
