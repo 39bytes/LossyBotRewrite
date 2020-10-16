@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using YoutubeExplode.Videos;
@@ -37,6 +38,7 @@ namespace LossyBotRewrite
         private void DestroyVoiceService(ulong id)
         {
             activeVoiceServices.Remove(id);
+            File.Delete($"{id}.mp3");
             Console.WriteLine($"Destroyed voice service for {id}");
         }
 
