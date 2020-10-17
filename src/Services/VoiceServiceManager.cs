@@ -40,6 +40,11 @@ namespace LossyBotRewrite
             activeVoiceServices[guildId].AddToQueue(video);
         }
 
+        public Video GetCurrentlyPlaying(ulong guildId)
+        {
+            return activeVoiceServices[guildId].CurrentlyPlaying;
+        }
+
         public void KillFFMpegProcess(ulong guildId)
         {
             int id = activeVoiceServices[guildId].FFmpegId;
@@ -52,6 +57,20 @@ namespace LossyBotRewrite
                     process.WaitForExit();
                 }
             }
+        }
+
+        public TimeSpan? GetFFMpegUptime(ulong guildId)
+        {
+            int id = activeVoiceServices[guildId].FFmpegId;
+            TimeSpan? uptime = null;
+            using (Process process = Process.GetProcessById(id))
+            {
+                if(process.ProcessName == "ffmpeg")
+                {
+                    uptime = DateTime.Now - process.StartTime;
+                }
+            }
+            return uptime;
         }
 
         private void DestroyVoiceService(ulong id)
