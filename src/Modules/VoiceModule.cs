@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YoutubeExplode;
+using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
@@ -42,6 +43,32 @@ namespace LossyBotRewrite
             {
                 await _voiceManager.CreateVoiceService((Context.User as IGuildUser).VoiceChannel, info);
             }
+        }
+
+        [Command("playlist")]
+        public async Task VoicePlaylist(string playlistUrl)
+        {
+            if ((Context.User as IGuildUser).VoiceChannel == null)
+            {
+                await ReplyAsync("Enter a voice channel to use voice commands!");
+                return;
+            }
+
+            var client = new YoutubeClient();
+            var info = await client.Playlists.GetAsync(playlistUrl);
+            await ReplyAsync("", false, GetPlaylistEmbed(info).Build());
+
+            var videos = await client.Playlists.GetVideosAsync(info.Id);
+
+            if (_voiceManager.HasActiveService(Context.Guild.Id))
+            {
+                //_voiceManager.AddVideoToServiceQueue(Context.Guild.Id, info);
+            }
+            else
+            {
+                await _voiceManager.CreateVoiceService((Context.User as IGuildUser).VoiceChannel, videos);
+            }
+
         }
 
         [Command("skip")]
@@ -108,6 +135,15 @@ namespace LossyBotRewrite
             builder.WithTitle(":musical_note: Added song to queue!");
             builder.AddField(video.Title, $"**By:** {video.Author}\n**Length:** {video.Duration.ToString().Substring(3)}");
             builder.WithThumbnailUrl(video.Thumbnails.MediumResUrl);
+            return builder;
+        }
+
+        private EmbedBuilder GetPlaylistEmbed(Playlist playlist)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.WithTitle(":musical_note: Added playlist to queue!");
+            builder.AddField(playlist.Title, $"**By:** {playlist.Author}\n");
+            builder.WithThumbnailUrl(playlist.Thumbnails.MediumResUrl);
             return builder;
         }
     }

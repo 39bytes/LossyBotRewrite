@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 
 namespace LossyBotRewrite
@@ -35,9 +36,24 @@ namespace LossyBotRewrite
 
             await service.PlayAudioAsync().ContinueWith(t => DestroyVoiceService(channel.GuildId)); //Play audio, then destroy the object once finished
         }
+
+        public async Task CreateVoiceService(IVoiceChannel channel, IEnumerable<Video> playlist)
+        {
+            var service = new VoiceService(_client, channel, channel.GuildId);
+            activeVoiceServices.Add(channel.GuildId, service);
+            service.AddPlaylistToQueue(playlist);
+            Console.WriteLine($"Created voice service for {channel.GuildId}");
+
+            await service.PlayAudioAsync().ContinueWith(t => DestroyVoiceService(channel.GuildId)); //Play audio, then destroy the object once finished
+        }
         public void AddVideoToServiceQueue(ulong guildId, Video video)
         {
             activeVoiceServices[guildId].AddToQueue(video);
+        }
+
+        public void AddPlaylistToServiceQueue(ulong guildId, IEnumerable<Video> playlist)
+        {
+            activeVoiceServices[guildId].AddPlaylistToQueue(playlist);
         }
 
         public Video GetCurrentlyPlaying(ulong guildId)

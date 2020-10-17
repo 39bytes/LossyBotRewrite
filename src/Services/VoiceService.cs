@@ -85,5 +85,13 @@ namespace LossyBotRewrite
         {
             Queue.Enqueue(video);
         }
+
+        public void AddPlaylistToQueue(IEnumerable<Video> playlist)
+        {
+            foreach(Video video in playlist)
+            {
+                Queue.Enqueue(video);
+            }
+        }
     }
 }
