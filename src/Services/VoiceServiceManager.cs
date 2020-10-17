@@ -30,14 +30,14 @@ namespace LossyBotRewrite
         {
             var service = new VoiceService(_client, channel, channel.GuildId);
             activeVoiceServices.Add(channel.GuildId, service);
-            service.AddToQueue(video.Id);
+            service.AddToQueue(video);
             Console.WriteLine($"Created voice service for {channel.GuildId}");
 
             await service.PlayAudioAsync().ContinueWith(t => DestroyVoiceService(channel.GuildId)); //Play audio, then destroy the object once finished
         }
-        public void AddVideoToServiceQueue(ulong guildId, string videoId)
+        public void AddVideoToServiceQueue(ulong guildId, Video video)
         {
-            activeVoiceServices[guildId].AddToQueue(videoId);
+            activeVoiceServices[guildId].AddToQueue(video);
         }
 
         public void KillFFMpegProcess(ulong guildId)

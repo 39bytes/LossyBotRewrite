@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using YoutubeExplode;
+using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
 namespace LossyBotRewrite
@@ -16,7 +17,7 @@ namespace LossyBotRewrite
         private readonly DiscordSocketClient _client;
         private IVoiceChannel voiceChannel;
 
-        private Queue<string> queue = new Queue<string>();
+        private Queue<Video> queue = new Queue<Video>();
         private ulong id;
         public int FFmpegId { get; private set; }
 
@@ -52,10 +53,10 @@ namespace LossyBotRewrite
             await audioClient.StopAsync();
         }
 
-        private async Task DownloadVideo(string videoId)
+        private async Task DownloadVideo(Video video)
         {
             YoutubeClient youtube = new YoutubeClient();
-            var manifest = await youtube.Videos.Streams.GetManifestAsync(videoId);
+            var manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
 
             var streamInfo = manifest.GetAudioOnly().WithHighestBitrate();
 
@@ -77,9 +78,9 @@ namespace LossyBotRewrite
                 RedirectStandardOutput = true,
             });
         }
-        public void AddToQueue(string videoId)
+        public void AddToQueue(Video video)
         {
-            queue.Enqueue(videoId);
+            queue.Enqueue(video);
         }
     }
 }
