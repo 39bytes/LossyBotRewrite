@@ -5,11 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using YoutubeExplode;
-using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
 namespace LossyBotRewrite
@@ -21,6 +18,7 @@ namespace LossyBotRewrite
 
         private Queue<string> queue = new Queue<string>();
         private ulong id;
+        public int FFmpegId { get; private set; }
 
         public VoiceService(DiscordSocketClient client, IVoiceChannel channel, ulong guildId)
         {
@@ -32,7 +30,7 @@ namespace LossyBotRewrite
 
         public async Task PlayAudioAsync()
         {
-            var audioClient = await voiceChannel.ConnectAsync();
+            var audioClient = await voiceChannel.ConnectAsync(selfDeaf: true);
             while (queue.Count != 0)
             {
                 await DownloadVideo(queue.Dequeue()); //dequeue the latest video
@@ -40,6 +38,7 @@ namespace LossyBotRewrite
                 using (var output = ffmpeg.StandardOutput.BaseStream)
                 using (var discord = audioClient.CreatePCMStream(AudioApplication.Mixed))
                 {
+                    FFmpegId = ffmpeg.Id;
                     try
                     {
                         await output.CopyToAsync(discord);

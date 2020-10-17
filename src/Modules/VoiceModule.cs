@@ -42,6 +42,18 @@ namespace LossyBotRewrite
             }
         }
 
+        [Command("skip")]
+        public async Task SkipSong()
+        {
+            if ((Context.User as IGuildUser).VoiceChannel == null)
+            {
+                await ReplyAsync("Enter a voice channel to use voice commands!");
+                return;
+            }
+            _voiceManager.KillFFMpegProcess(Context.Guild.Id);
+            await ReplyAsync(":fast_forward: Skipped song");
+        }
+
         private EmbedBuilder GetVideoEmbed(Video video)
         {
             EmbedBuilder builder = new EmbedBuilder();
