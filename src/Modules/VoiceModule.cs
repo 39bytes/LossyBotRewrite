@@ -34,7 +34,7 @@ namespace LossyBotRewrite
 
             if (_voiceManager.HasActiveService(Context.Guild.Id))
             {
-                _voiceManager.AddVideoToServiceQueue(Context.Guild.Id, info.Id);
+                _voiceManager.AddVideoToServiceQueue(Context.Guild.Id, info);
             }
             else
             {
