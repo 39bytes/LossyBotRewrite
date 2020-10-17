@@ -45,6 +45,12 @@ namespace LossyBotRewrite
             return activeVoiceServices[guildId].CurrentlyPlaying;
         }
 
+        public Queue<Video> GetQueue(ulong guildId)
+        {
+            return activeVoiceServices[guildId].Queue;
+        }
+
+
         public void KillFFMpegProcess(ulong guildId)
         {
             int id = activeVoiceServices[guildId].FFmpegId;

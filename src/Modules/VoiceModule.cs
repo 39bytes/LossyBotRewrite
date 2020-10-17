@@ -52,7 +52,7 @@ namespace LossyBotRewrite
                 await ReplyAsync("Enter a voice channel to use voice commands!");
                 return;
             }
-            _voiceManager.KillFFMpegProcess(Context.Guild.Id);
+            _voiceManager.KillFFMpegProcess(Context.Guild.Id); //Killing the FFMpeg process makes it move on to the next
             await ReplyAsync(":fast_forward: Skipped song");
         }
 
@@ -67,7 +67,7 @@ namespace LossyBotRewrite
             Video playing = _voiceManager.GetCurrentlyPlaying(Context.Guild.Id);
             TimeSpan? uptime = _voiceManager.GetFFMpegUptime(Context.Guild.Id);
 
-            if(uptime == null)
+            if(!uptime.HasValue)
             {
                 await ReplyAsync("No song currently playing!");
                 return;
@@ -76,8 +76,8 @@ namespace LossyBotRewrite
             int playPercent = (int)(100 * uptime.Value.TotalSeconds / playing.Duration.TotalSeconds);
             string progressBar = new string('#', playPercent / 5) + new string('.', 20 - (playPercent / 5));
 
-            string progress = uptime.Value.ToString("m\\:ss"); 
-            string duration = playing.Duration.ToString("m\\:ss"); 
+            string progress = uptime.Value.ToString(@"m\:ss"); 
+            string duration = playing.Duration.ToString(@"m\:ss"); 
 
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle(":musical_note: Queue");
@@ -85,7 +85,19 @@ namespace LossyBotRewrite
             builder.AddField("Now Playing", $"**{playing.Title}**\n" +
                                             $"`{progressBar}`\n{progress} / {duration}\n" +
                                             $"By: {playing.Author}");
-                                            
+
+            TimeSpan totalLength = new TimeSpan(); //To calculate total length of the queue
+
+            foreach(Video video in _voiceManager.GetQueue(Context.Guild.Id))
+            {
+                totalLength += video.Duration; //add song duration to totalLength
+                string s = video.Duration.ToString(@"m\:ss");
+                builder.AddField($"**{video.Title}** ({s})", $"By: {video.Author}");
+            }
+
+            totalLength += playing.Duration - uptime.Value; //Add the remaining time in the current song
+            string totalLengthStr = totalLength.ToString(@"hh\:mm\:ss");
+            builder.WithFooter($"Queue length: {totalLengthStr}");
 
             await ReplyAsync("", false, builder.Build());
         }
