@@ -61,7 +61,7 @@ namespace LossyBotRewrite
             YoutubeClient youtube = new YoutubeClient();
             var manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
 
-            var streamInfo = manifest.GetAudioOnly().WithHighestBitrate();
+            var streamInfo = manifest.GetAudioOnly().First();
 
             if(streamInfo != null)
             {
@@ -92,6 +92,11 @@ namespace LossyBotRewrite
             {
                 Queue.Enqueue(video);
             }
+        }
+
+        public void EmptyQueue()
+        {
+            Queue.Clear();
         }
     }
 }

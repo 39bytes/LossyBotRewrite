@@ -33,8 +33,8 @@ namespace LossyBotRewrite
 
             var client = new YoutubeClient();
             var info = await client.Videos.GetAsync(url);
-            await ReplyAsync("", false, GetVideoEmbed(info).Build());
 
+            await ReplyAsync("", false, GetVideoEmbed(info).Build());
             if (_voiceManager.HasActiveService(Context.Guild.Id))
             {
                 _voiceManager.AddVideoToServiceQueue(Context.Guild.Id, info);
@@ -46,7 +46,7 @@ namespace LossyBotRewrite
         }
 
         [Command("playlist")]
-        public async Task VoicePlaylist(string playlistUrl)
+        public async Task VoicePlaylist(params string[] args)
         {
             if ((Context.User as IGuildUser).VoiceChannel == null)
             {
@@ -54,11 +54,26 @@ namespace LossyBotRewrite
                 return;
             }
 
+            bool shuffle = false;
+            string playlistUrl;
+            if (args[0].ToLower() == "shuffle")
+            {
+                shuffle = true;
+                playlistUrl = args[1];
+            }
+            else
+            {
+                playlistUrl = args[0];
+            }
+
             var client = new YoutubeClient();
             var info = await client.Playlists.GetAsync(playlistUrl);
             await ReplyAsync("", false, GetPlaylistEmbed(info).Build());
 
-            var videos = await client.Playlists.GetVideosAsync(info.Id);
+            var videos = await client.Playlists.GetVideosAsync(info.Id).ToListAsync();
+
+            if (shuffle)
+                videos.Shuffle();
 
             if (_voiceManager.HasActiveService(Context.Guild.Id))
             {
@@ -127,6 +142,13 @@ namespace LossyBotRewrite
             builder.WithFooter($"Queue length: {totalLengthStr}");
 
             await ReplyAsync("", false, builder.Build());
+        }
+
+        [Command("stop")]
+        public async Task VoiceStop()
+        {
+            _voiceManager.ForceStopService(Context.Guild.Id);
+            await ReplyAsync("Disconnected from voice.");
         }
 
         private EmbedBuilder GetVideoEmbed(Video video)

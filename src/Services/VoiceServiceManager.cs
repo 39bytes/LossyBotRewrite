@@ -46,6 +46,19 @@ namespace LossyBotRewrite
 
             await service.PlayAudioAsync().ContinueWith(t => DestroyVoiceService(channel.GuildId)); //Play audio, then destroy the object once finished
         }
+        private void DestroyVoiceService(ulong id)
+        {
+            activeVoiceServices.Remove(id);
+            File.Delete($"{id}.mp3");
+            Console.WriteLine($"Destroyed voice service for {id}");
+        }
+
+        public void ForceStopService(ulong guildId)
+        {
+            activeVoiceServices[guildId].EmptyQueue();
+            KillFFMpegProcess(guildId);
+        }
+
         public void AddVideoToServiceQueue(ulong guildId, Video video)
         {
             activeVoiceServices[guildId].AddToQueue(video);
@@ -55,17 +68,6 @@ namespace LossyBotRewrite
         {
             activeVoiceServices[guildId].AddPlaylistToQueue(playlist);
         }
-
-        public Video GetCurrentlyPlaying(ulong guildId)
-        {
-            return activeVoiceServices[guildId].CurrentlyPlaying;
-        }
-
-        public Queue<Video> GetQueue(ulong guildId)
-        {
-            return activeVoiceServices[guildId].Queue;
-        }
-
 
         public void KillFFMpegProcess(ulong guildId)
         {
@@ -95,11 +97,14 @@ namespace LossyBotRewrite
             return uptime;
         }
 
-        private void DestroyVoiceService(ulong id)
+        public Video GetCurrentlyPlaying(ulong guildId)
         {
-            activeVoiceServices.Remove(id);
-            File.Delete($"{id}.mp3");
-            Console.WriteLine($"Destroyed voice service for {id}");
+            return activeVoiceServices[guildId].CurrentlyPlaying;
+        }
+
+        public Queue<Video> GetQueue(ulong guildId)
+        {
+            return activeVoiceServices[guildId].Queue;
         }
     }
 }
