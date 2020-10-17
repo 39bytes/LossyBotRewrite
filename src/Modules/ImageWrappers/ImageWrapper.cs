@@ -59,7 +59,7 @@ namespace LossyBotRewrite
         public void Magik()
         {
             image.LiquidRescale((Percentage)65, (Percentage)65);
-            image.Resize((Percentage)135, (Percentage)135);
+            image.Resize((Percentage)153, (Percentage)153);
         }
 
         public void Negate()
