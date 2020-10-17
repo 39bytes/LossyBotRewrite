@@ -62,7 +62,7 @@ namespace LossyBotRewrite
 
             if (_voiceManager.HasActiveService(Context.Guild.Id))
             {
-                //_voiceManager.AddVideoToServiceQueue(Context.Guild.Id, info);
+                _voiceManager.AddPlaylistToServiceQueue(Context.Guild.Id, videos);
             }
             else
             {
@@ -115,7 +115,7 @@ namespace LossyBotRewrite
 
             TimeSpan totalLength = new TimeSpan(); //To calculate total length of the queue
 
-            foreach(Video video in _voiceManager.GetQueue(Context.Guild.Id))
+            foreach (Video video in _voiceManager.GetQueue(Context.Guild.Id).Take(9)) //make it restricted to 10 total elements
             {
                 totalLength += video.Duration; //add song duration to totalLength
                 string s = video.Duration.ToString(@"m\:ss");
