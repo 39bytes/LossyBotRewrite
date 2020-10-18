@@ -20,6 +20,13 @@ namespace LossyBotRewrite
         public VoiceServiceManager(DiscordSocketClient client)
         {
             _client = client;
+
+            _client.UserVoiceStateUpdated += CheckIfVoiceChannelEmpty;
+        }
+
+        private async Task CheckIfVoiceChannelEmpty(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState)
+        {
+
         }
 
         public bool HasActiveService(ulong guildId)
@@ -105,6 +112,11 @@ namespace LossyBotRewrite
         public Queue<Video> GetQueue(ulong guildId)
         {
             return activeVoiceServices[guildId].Queue;
+        }
+
+        public async Task CheckIfVoiceChannelEmpty()
+        {
+
         }
     }
 }
