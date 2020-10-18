@@ -21,13 +21,13 @@ namespace LossyBotRewrite
         {
             _client = client;
 
-            _client.UserVoiceStateUpdated += CheckIfVoiceChannelEmpty;
+            //_client.UserVoiceStateUpdated += CheckIfVoiceChannelEmpty;
         }
 
-        private async Task CheckIfVoiceChannelEmpty(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState)
-        {
+        //private async Task CheckIfVoiceChannelEmpty(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState)
+        //{
 
-        }
+        //}
 
         public bool HasActiveService(ulong guildId)
         {
@@ -112,11 +112,6 @@ namespace LossyBotRewrite
         public Queue<Video> GetQueue(ulong guildId)
         {
             return activeVoiceServices[guildId].Queue;
-        }
-
-        public async Task CheckIfVoiceChannelEmpty()
-        {
-
         }
     }
 }

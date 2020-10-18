@@ -39,7 +39,7 @@ namespace LossyBotRewrite
         {
             string token = _config["tokens:discord"];
             if (string.IsNullOrWhiteSpace(token))
-                throw new Exception("Enter your bot's token into config.yml in the root directory.");
+                throw new Exception("Enter bot token into config.yml in the root directory.");
 
             SetUpFilesystem();
 
@@ -96,7 +96,6 @@ namespace LossyBotRewrite
                     CreateEmptyXML(file);
                     Console.WriteLine("Created " + file);
                 }
-                
             }
         }
 
