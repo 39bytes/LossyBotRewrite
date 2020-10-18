@@ -59,6 +59,7 @@ namespace LossyBotRewrite
             .AddSingleton<LoggingService>()
             .AddSingleton<VoiceServiceManager>()
             .AddSingleton<SplatnetService>()
+            .AddSingleton<CompileService>()
             .AddSingleton<Random>()
             .AddSingleton(Configuration);
         }

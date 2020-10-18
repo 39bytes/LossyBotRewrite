@@ -59,7 +59,7 @@ namespace LossyBotRewrite
 
             for (int i = 1; i < 4; i++)
             {
-                remaining = TimeSpan.FromSeconds(modeRotations[currentRotation + i].Value<long>("end_time") - DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                remaining = remaining.Add(TimeSpan.FromSeconds(7200)); //just add 2 hours for the next rotations
                 builder.AddField($"Next: {modeRotations.SelectToken($"[{currentRotation + i}].rule.name")}", $"On **{modeRotations.SelectToken($"[{currentRotation + i}].stage_a.name")}** " +
                                                                                                              $"and **{modeRotations.SelectToken($"[{currentRotation + i}].stage_b.name")}**\n" +
                                                                                                              $"In {FormatTime(remaining)}");
