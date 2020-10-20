@@ -9,6 +9,7 @@ using Discord;
 using Discord.WebSocket;
 using System.IO;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace LossyBotRewrite
 {
@@ -16,6 +17,8 @@ namespace LossyBotRewrite
     [Group("color")]
     public class RolesModule : ModuleBase<SocketCommandContext>
     {
+        XDocument doc = XDocument.Load(Globals.path + "Servers.xml");
+
         private readonly List<string> colors = new List<string>
         {   "red",
             "pink",
@@ -81,6 +84,14 @@ namespace LossyBotRewrite
         [Command("custom")]
         public async Task CustomColor(int r, int g, int b)
         {
+            XElement colorElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/CustomColor");
+
+            if (colorElem.Value == "false")
+            {
+                await ReplyAsync("Custom colors are turned off for this server!");
+                return;
+            }
+
             if (Enumerable.Range(54 - 10, 20).Contains(r) &&
                 Enumerable.Range(57 - 10, 20).Contains(g) &&
                 Enumerable.Range(63 - 10, 20).Contains(b))
@@ -103,11 +114,6 @@ namespace LossyBotRewrite
                     await (Context.User as IGuildUser).RemoveRoleAsync(role);
                 }
             }
-            //Add turning custom colors off or on for a server later
-
-            //string path = $"{Globals.path}{Path.DirectorySeparatorChar}Servers.xml";
-
-            //XDocument doc = XDocument.Load(path);
 
             Color color = new Color(r, g, b);
 

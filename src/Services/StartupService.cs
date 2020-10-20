@@ -35,6 +35,8 @@ namespace LossyBotRewrite
             _client.Ready += OnReady;
         }
 
+        private bool firstStartup = false;
+
         public async Task StartAsync()
         {
             string token = _config["tokens:discord"];
@@ -53,15 +55,7 @@ namespace LossyBotRewrite
 
         private void SetUpServersXML()
         {
-            Console.WriteLine("Setting up filesystem...");
-            if (!Directory.Exists(Globals.path))
-                Directory.CreateDirectory(Globals.path);
-
-            if (!File.Exists($"{Globals.path}Servers.xml"))
-            {
-                CreateEmptyXML("Servers.xml");
-                Console.WriteLine("Created Servers.xml");
-            }
+            Console.WriteLine("Created Servers.xml");
 
             string serversPath = $"{Globals.path}Servers.xml";
 
@@ -74,7 +68,9 @@ namespace LossyBotRewrite
             {
                 if (!ids.Contains(guild.Id))
                 {
-                    xml.Root.Add(new XElement("server", new XAttribute("id", guild.Id)));
+                    xml.Root.Add(new XElement("server", 
+                                 new XAttribute("id", guild.Id),
+                                 new XElement("CustomColor", false)));
                 }
             }
 
@@ -83,6 +79,10 @@ namespace LossyBotRewrite
 
         private void SetUpFilesystem()
         {
+            Console.WriteLine("Setting up filesystem...");
+            if (!Directory.Exists(Globals.path))
+                Directory.CreateDirectory(Globals.path);
+
             List<string> filenames = new List<string>()
             {
                 "profiles.xml",
@@ -97,11 +97,21 @@ namespace LossyBotRewrite
                     Console.WriteLine("Created " + file);
                 }
             }
+
+            if(!File.Exists(Globals.path + "Servers.xml"))
+            {
+                CreateEmptyXML("Servers.xml");
+                firstStartup = true;
+            }
         }
 
         private async Task OnReady()
         {
-            SetUpServersXML();
+            if (firstStartup)
+            {
+                SetUpServersXML();
+                firstStartup = false;
+            }
             await Task.CompletedTask;
         }
 

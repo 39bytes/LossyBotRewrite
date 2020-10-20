@@ -27,6 +27,7 @@ namespace LossyBotRewrite
                 if (timeSinceLast >= 7200 * 8) //if 16 hours have passed since the last rotation
                 {
                     await DownloadSchedule();
+                    File.Delete(Globals.path + currentSchedule.Name);
                 }
                 else
                 {

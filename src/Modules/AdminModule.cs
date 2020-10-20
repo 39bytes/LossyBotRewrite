@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Websocket;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace LossyBotRewrite
 {
@@ -17,9 +17,10 @@ namespace LossyBotRewrite
         public async Task ToggleCustomColor(bool toggle)
         {
             XElement colorElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/CustomColor");
-            
-            colorElem.Value = toggle.ToString();
+
+            colorElem.SetValue(toggle);
             await ReplyAsync($"Custom color set to `{toggle}`");
+            doc.Save(Globals.path + "Servers.xml");
         }
     }
 }
