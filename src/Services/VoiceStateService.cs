@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Tweetinvi.Models.DTO;
 
 namespace LossyBotRewrite
 {
@@ -14,8 +13,6 @@ namespace LossyBotRewrite
     {
         private readonly DiscordSocketClient _client;
         private readonly VoiceServiceManager _voiceManager;
-
-        XDocument doc = XDocument.Load(Globals.path + "Servers.xml");
 
         public VoiceStateService(DiscordSocketClient client, VoiceServiceManager manager)
         {
@@ -27,25 +24,26 @@ namespace LossyBotRewrite
 
         private async Task OnVoiceStateUpdated(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState)
         {
+            XDocument doc = XDocument.Load(Globals.path + "Servers.xml");
             if (oldState.VoiceChannel == null && newState.VoiceChannel != null)
             {
-                XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{newState.VoiceChannel.Guild.Id}']/InVoiceRole");
-                if(roleElem.Value == null)
+                XElement inVoiceChannelElem = doc.Root.XPathSelectElement($"./server[@id='{newState.VoiceChannel.Guild.Id}']/InVoiceChannel");
+                if (inVoiceChannelElem.Value == "")
                     return;
 
-                var role = newState.VoiceChannel.Guild.GetRole(ulong.Parse(roleElem.Value));
-                await (user as IGuildUser).AddRoleAsync(role);
+                OverwritePermissions permissions = new OverwritePermissions(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow);
+
+                var textChannel = newState.VoiceChannel.Guild.GetTextChannel(ulong.Parse(inVoiceChannelElem.Value));
+                await textChannel.AddPermissionOverwriteAsync(user, permissions);
             }
             else if(oldState.VoiceChannel != null && newState.VoiceChannel == null)
             {
-                XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{oldState.VoiceChannel.Guild.Id}']/InVoiceRole");
-                if (roleElem.Value == null)
+                XElement inVoiceChannelElem = doc.Root.XPathSelectElement($"./server[@id='{oldState.VoiceChannel.Guild.Id}']/InVoiceChannel");
+                if (inVoiceChannelElem.Value == "")
                     return;
 
-                var role = oldState.VoiceChannel.Guild.GetRole(ulong.Parse(roleElem.Value));
-                await (user as IGuildUser).RemoveRoleAsync(role);
-
-                
+                var textChannel = oldState.VoiceChannel.Guild.GetTextChannel(ulong.Parse(inVoiceChannelElem.Value));
+                await textChannel.RemovePermissionOverwriteAsync(user);
             }
         }
     }

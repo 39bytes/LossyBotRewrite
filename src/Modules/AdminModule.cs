@@ -23,18 +23,18 @@ namespace LossyBotRewrite
             doc.Save(Globals.path + "Servers.xml");
         }
 
-        [Command("set invoice")]
-        public async Task SetInVoiceRoleId(ulong id)
+        [Command("set InVoiceChannel")]
+        public async Task SetInVoiceChannel(ulong id)
         {
-            if (Context.Guild.GetRole(id) == null)
+            if (Context.Guild.GetTextChannel(id) == null)
             {
-                await ReplyAsync("Invalid role!");
+                await ReplyAsync("Invalid channel!");
                 return;
             }
 
-            XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/InVoiceRole");
+            XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/InVoiceChannel");
             roleElem.SetValue(id);
-            await ReplyAsync($"In voice role set to `{id}`");
+            await ReplyAsync($"In voice channel set to `{id}`");
             doc.Save(Globals.path + "Servers.xml");
         }
     }

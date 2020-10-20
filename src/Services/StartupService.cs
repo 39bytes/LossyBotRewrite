@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,7 +50,6 @@ namespace LossyBotRewrite
             await _client.StartAsync();
 
             TwitterAuthenticate();
-
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider); // Load commands and modules into the command service
         }
 
@@ -71,7 +71,7 @@ namespace LossyBotRewrite
                     xml.Root.Add(new XElement("server", 
                                  new XAttribute("id", guild.Id),
                                  new XElement("CustomColor", false),
-                                 new XElement("InVoiceRole", null)));
+                                 new XElement("InVoiceChannel", null)));
                 }
             }
 
