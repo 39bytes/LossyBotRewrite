@@ -70,7 +70,8 @@ namespace LossyBotRewrite
                 {
                     xml.Root.Add(new XElement("server", 
                                  new XAttribute("id", guild.Id),
-                                 new XElement("CustomColor", false)));
+                                 new XElement("CustomColor", false),
+                                 new XElement("InVoiceRole", null)));
                 }
             }
 
