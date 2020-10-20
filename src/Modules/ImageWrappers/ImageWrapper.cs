@@ -96,22 +96,28 @@ namespace LossyBotRewrite
                 Height = image.Height / 3,
                 Defines = new CaptionReadDefines()
                 {
-                    MaxFontPointsize = (topText.Length >= 20) ? 36 : 45
+                    MaxFontPointsize = (topText.Length >= 20) ? 40 : 45
                 }
             };
 
             image.Alpha(AlphaOption.Opaque);
 
-            using (var top = new MagickImage($"caption:{topText}", readSettings))
+            if(topText != "")
             {
-                image.Composite(top, 0, 0, CompositeOperator.Over);
-            }
-            readSettings.TextGravity = Gravity.South;
-            using (var bottom = new MagickImage($"caption:{bottomText}", readSettings))
-            {
-                image.Composite(bottom, 0, image.Height - (int)readSettings.Height, CompositeOperator.Over);
+                using (var top = new MagickImage($"caption:{topText}", readSettings))
+                {
+                    image.Composite(top, 0, 0, CompositeOperator.Over);
+                }
             }
 
+            if (bottomText != "")
+            {
+                readSettings.TextGravity = Gravity.South;
+                using (var bottom = new MagickImage($"caption:{bottomText}", readSettings))
+                {
+                    image.Composite(bottom, 0, image.Height - (int)readSettings.Height, CompositeOperator.Over);
+                }
+            }
         }
 
         //Gif effects return a new object

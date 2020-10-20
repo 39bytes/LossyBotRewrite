@@ -142,25 +142,31 @@ namespace LossyBotRewrite
                 Height = image[0].Height / 3,
                 Defines = new CaptionReadDefines()
                 {
-                    MaxFontPointsize = (topText.Length >= 20) ? 36 : 45
+                    MaxFontPointsize = (topText.Length >= 20) ? 40 : 45
                 }
             };
             
-            using (var top = new MagickImage($"caption:{topText}", readSettings))
+            if(topText != "")
             {
-                for (int i = 0; i < image.Count; i++)
+                using (var top = new MagickImage($"caption:{topText}", readSettings))
                 {
-                    image[i].Alpha(AlphaOption.Opaque);
-                    image[i].Composite(top, 0, 0, CompositeOperator.Over);
+                    for (int i = 0; i < image.Count; i++)
+                    {
+                        image[i].Alpha(AlphaOption.Opaque);
+                        image[i].Composite(top, 0, 0, CompositeOperator.Over);
+                    }
                 }
             }
 
-            readSettings.TextGravity = Gravity.South;
-            using (var bottom = new MagickImage($"caption:{bottomText}", readSettings))
+            if(bottomText != null)
             {
-                for (int i = 0; i < image.Count; i++)
+                readSettings.TextGravity = Gravity.South;
+                using (var bottom = new MagickImage($"caption:{bottomText}", readSettings))
                 {
-                    image[i].Composite(bottom, 0, image[0].Height - (int)readSettings.Height, CompositeOperator.Over);
+                    for (int i = 0; i < image.Count; i++)
+                    {
+                        image[i].Composite(bottom, 0, image[0].Height - (int)readSettings.Height, CompositeOperator.Over);
+                    }
                 }
             }
         }
