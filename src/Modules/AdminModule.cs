@@ -26,6 +26,12 @@ namespace LossyBotRewrite
         [Command("set invoice")]
         public async Task SetInVoiceRoleId(ulong id)
         {
+            if (Context.Guild.GetRole(id) == null)
+            {
+                await ReplyAsync("Invalid role!");
+                return;
+            }
+
             XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/InVoiceRole");
             roleElem.SetValue(id);
             await ReplyAsync($"In voice role set to `{id}`");

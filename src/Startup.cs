@@ -37,6 +37,7 @@ namespace LossyBotRewrite
             var provider = services.BuildServiceProvider();     // Build the service provider
             provider.GetRequiredService<LoggingService>();      // Start the logging service
             provider.GetRequiredService<CommandHandler>(); 		// Start the command handler service
+            provider.GetRequiredService<VoiceStateService>();
 
             await provider.GetRequiredService<StartupService>().StartAsync();       // Start the startup service
             await Task.Delay(-1);
@@ -58,6 +59,7 @@ namespace LossyBotRewrite
             .AddSingleton<StartupService>()
             .AddSingleton<LoggingService>()
             .AddSingleton<VoiceServiceManager>()
+            .AddSingleton<VoiceStateService>()
             .AddSingleton<SplatnetService>()
             .AddSingleton<CompileService>()
             .AddSingleton<Random>()
