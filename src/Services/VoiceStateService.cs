@@ -44,6 +44,8 @@ namespace LossyBotRewrite
 
                 var role = oldState.VoiceChannel.Guild.GetRole(ulong.Parse(roleElem.Value));
                 await (user as IGuildUser).RemoveRoleAsync(role);
+
+                
             }
         }
     }

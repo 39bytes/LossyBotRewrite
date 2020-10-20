@@ -97,6 +97,11 @@ namespace LossyBotRewrite
             return uptime;
         }
 
+        public IVoiceChannel GetServiceVoiceChannel(ulong guildId)
+        {
+            return activeVoiceServices[guildId].VoiceChannel;
+        }
+
         public Video GetCurrentlyPlaying(ulong guildId)
         {
             return activeVoiceServices[guildId].CurrentlyPlaying;

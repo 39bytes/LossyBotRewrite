@@ -15,10 +15,10 @@ namespace LossyBotRewrite
     public class VoiceService
     {
         private readonly DiscordSocketClient _client;
-        private IVoiceChannel voiceChannel;
-
-        public Queue<Video> Queue { get; private set; }
         private ulong id;
+
+        public IVoiceChannel VoiceChannel { get; private set; }
+        public Queue<Video> Queue { get; private set; }
         public int FFmpegId { get; private set; }
         public Video CurrentlyPlaying { get; private set; }
 
@@ -26,13 +26,13 @@ namespace LossyBotRewrite
         {
             _client = client;
             id = guildId;
-            voiceChannel = channel;
+            VoiceChannel = channel;
             Queue = new Queue<Video>();
         }
 
         public async Task PlayAudioAsync()
         {
-            var audioClient = await voiceChannel.ConnectAsync(selfDeaf: true);
+            var audioClient = await VoiceChannel.ConnectAsync(selfDeaf: true);
             while (Queue.Count != 0)
             {
                 CurrentlyPlaying = Queue.Dequeue(); //dequeue the latest video
