@@ -41,7 +41,7 @@ namespace LossyBotRewrite
                 ulong guild = oldState.VoiceChannel.Guild.Id;
                 if (_voiceManager.HasActiveService(guild))
                 {
-                    if (oldState.VoiceChannel.Id == _voiceManager.GetServiceVoiceChannel(guild).Id)
+                    if (oldState.VoiceChannel.Id == _voiceManager.GetServiceVoiceChannelId(guild))
                     {
                         if (oldState.VoiceChannel.Users.Count == 1) //only the bot left in there
                         {
@@ -49,7 +49,6 @@ namespace LossyBotRewrite
                         }
                     }
                 }
-
                 XElement inVoiceChannelElem = doc.Root.XPathSelectElement($"./server[@id='{guild}']/InVoiceChannel");
                 if (inVoiceChannelElem.Value == "")
                     return;
@@ -62,7 +61,7 @@ namespace LossyBotRewrite
                 ulong guild = oldState.VoiceChannel.Guild.Id;
                 if (_voiceManager.HasActiveService(guild))
                 {
-                    if (oldState.VoiceChannel.Id == _voiceManager.GetServiceVoiceChannel(guild).Id)
+                    if (oldState.VoiceChannel.Id == _voiceManager.GetServiceVoiceChannelId(guild))
                     {
                         if (oldState.VoiceChannel.Users.Count == 1) //only the bot left in there
                         {
