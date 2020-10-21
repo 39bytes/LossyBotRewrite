@@ -14,6 +14,8 @@ using YoutubeExplode.Videos.Streams;
 namespace LossyBotRewrite
 {
     [Group("voice")]
+    [Name("Voice")]
+    [Summary("For playing music in voice channels.\nThe bot will leave voice chat automatically if there are no other users left in it.")]
     public class VoiceModule : ModuleBase<SocketCommandContext>
     {
         private readonly VoiceServiceManager _voiceManager;
@@ -24,6 +26,7 @@ namespace LossyBotRewrite
         }
 
         [Command("play")]
+        [Summary("Plays a song in your current voice channel or adds it to the queue.\n`voice play [youtube url]` ")]
         public async Task VoicePlay(string url)
         {
             if((Context.User as IGuildUser).VoiceChannel == null)
@@ -34,6 +37,11 @@ namespace LossyBotRewrite
 
             var client = new YoutubeClient();
             var info = await client.Videos.GetAsync(url);
+            if (info.Duration.Hours >= 1)
+            {
+                await ReplyAsync("Video is too long! Keep it under 1 hour.");
+                return;
+            }
 
             await ReplyAsync("", false, GetVideoEmbed(info).Build());
             if (_voiceManager.HasActiveService(Context.Guild.Id))
@@ -47,6 +55,7 @@ namespace LossyBotRewrite
         }
 
         [Command("playlist")]
+        [Summary("Plays an entire youtube playlist.\n`voice playlist [playlist url]`")]
         public async Task VoicePlaylist(params string[] args)
         {
             if ((Context.User as IGuildUser).VoiceChannel == null)
@@ -88,6 +97,8 @@ namespace LossyBotRewrite
         }
 
         [Command("skip")]
+        [Summary("Skips the song that's currently playing.\n`voice skip`")]
+
         public async Task SkipSong()
         {
             if ((Context.User as IGuildUser).VoiceChannel == null)
@@ -100,6 +111,7 @@ namespace LossyBotRewrite
         }
 
         [Command("queue")]
+        [Summary("Shows the song that's currently playing and the next 9 in the queue.\n`voice queue`")]
         public async Task VoiceQueue()
         {
             if ((Context.User as IGuildUser).VoiceChannel == null)
@@ -133,9 +145,13 @@ namespace LossyBotRewrite
 
             foreach (Video video in _voiceManager.GetQueue(Context.Guild.Id).Take(9)) //make it restricted to 10 total elements
             {
-                totalLength += video.Duration; //add song duration to totalLength
                 string s = video.Duration.ToString(@"m\:ss");
                 builder.AddField($"**{video.Title}** ({s})", $"By: {video.Author}");
+            }
+
+            foreach(Video video in _voiceManager.GetQueue(Context.Guild.Id))
+            {
+                totalLength += video.Duration;
             }
 
             totalLength += playing.Duration - uptime.Value; //Add the remaining time in the current song
@@ -146,6 +162,7 @@ namespace LossyBotRewrite
         }
 
         [Command("stop")]
+        [Summary("Stops sending audio, deletes the queue and leaves voice.\n`voice stop`")]
         public async Task VoiceStop()
         {
             _voiceManager.ForceStopService(Context.Guild.Id);
