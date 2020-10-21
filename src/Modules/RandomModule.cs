@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 
 namespace LossyBotRewrite
 {
+    [Name("Random")]
+    [Summary("For generating things randomly")]
     public class RandomModule : ModuleBase<SocketCommandContext>
     {
         [Command("rtd")]
+        [Summary("Generate a random number between 1 and the input number")]
         public async Task Rtd(int sides)
         {
             if (sides > 1)
@@ -26,6 +29,7 @@ namespace LossyBotRewrite
         }
 
         [Command("choose")]
+        [Summary("Chooses a random option from the given options")]
         public async Task Choose([Remainder] string input)
         {
             string[] choices = input.Split(' ');
@@ -34,6 +38,7 @@ namespace LossyBotRewrite
         }
 
         [Command("random")]
+        [Summary("Generates a random weapon, map, mode, private battle game, or user. random [option]")]
         public async Task Random(string input)
         {
             Random rand = new Random();

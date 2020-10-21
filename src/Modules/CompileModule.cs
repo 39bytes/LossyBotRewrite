@@ -17,6 +17,7 @@ namespace LossyBotRewrite
         }
 
         [Command("compile")]
+        [Summary("Compiles code in the given language.")]
         public async Task CompileCommand([Remainder]string code)
         {
             if (!IsCode(code))
