@@ -11,6 +11,7 @@ using Tweetinvi.Parameters;
 
 namespace LossyBotRewrite
 {
+    [Name("Tweet")]
     [Group("tweet")]
     public class TwitterModule : ModuleBase<SocketCommandContext>
     {

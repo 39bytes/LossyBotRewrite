@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace LossyBotRewrite
 {
+    [Name("Maps")]
     public class SplatnetModule : ModuleBase<SocketCommandContext>
     {
         private readonly SplatnetService _splatnetService;

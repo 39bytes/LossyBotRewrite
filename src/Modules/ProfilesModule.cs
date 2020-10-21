@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace LossyBotRewrite
 {
+    [Name("Profile")]
     [Group("profile")]
     public class ProfilesModule : ModuleBase<SocketCommandContext>
     {

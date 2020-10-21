@@ -23,13 +23,17 @@ namespace LossyBotRewrite
             builder.WithColor(new Color(114, 137, 218));
 
             var module = _service.Modules.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefault();
-            string desc = "";
+            builder.WithTitle($"{module.Name} commands");
             foreach(var command in module.Commands)
             {
-                var result = await command.CheckPreconditionsAsync(Context);
-                if (result.IsSuccess)
-                    desc += $"{command.Aliases.First()}\n";
+                builder.AddField(x =>
+                {
+                    x.Name = $"{module.Group} {command.Name}";
+                    x.Value = command.Summary;
+                    x.IsInline = false;
+                });
             }
+            await ReplyAsync("", false, builder.Build());
         }
     }
 }

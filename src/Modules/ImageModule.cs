@@ -13,6 +13,7 @@ using Discord;
 
 namespace LossyBotRewrite
 {
+    [Name("Image")]
     [Group("image")]
     public class ImageModule : ModuleBase<SocketCommandContext>
     {

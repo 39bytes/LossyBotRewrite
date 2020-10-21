@@ -10,6 +10,7 @@ using System.Xml.XPath;
 
 namespace LossyBotRewrite
 {
+    [Name("Tag")]
     [Group("tag")]
     public class TagModule : ModuleBase<SocketCommandContext>
     {

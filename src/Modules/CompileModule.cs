@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace LossyBotRewrite
 {
+    [Name("Compile")]
     public class CompileModule : ModuleBase<SocketCommandContext>
     {
         private readonly CompileService _compileService;

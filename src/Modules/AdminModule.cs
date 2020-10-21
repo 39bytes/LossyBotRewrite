@@ -9,6 +9,7 @@ using System.Xml.XPath;
 
 namespace LossyBotRewrite
 {
+    [Name("Admin")]
     [RequireUserPermission(GuildPermission.Administrator)]
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
