@@ -43,11 +43,8 @@ namespace LossyBotRewrite
                 url = lastAttachments.First().Attachments.First().Url;
             }
 
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
             IImageWrapper img = await ProcessImageAsync(url, args);
-            watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds);
+
             using (var stream = new MemoryStream())
             {
                 img.Write(stream);
