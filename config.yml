@@ -1,0 +1,10 @@
+tokens:
+    discord: null
+    twitter:
+        api: null
+        apiSecret: null
+        token: null
+        tokenSecret: null
+    jdoodle:
+        id: null
+        secret: null
