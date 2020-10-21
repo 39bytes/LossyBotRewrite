@@ -37,6 +37,7 @@ namespace LossyBotRewrite
         }
 
         [Command("add")]
+        [Summary("Gives you a color. Options: red, pink, purple, blue, teal, green, lime, yellow, orange")]
         public async Task AddColor(string input)
         {
             if (!colors.Contains(input))
@@ -59,6 +60,7 @@ namespace LossyBotRewrite
         }
 
         [Command("remove")]
+        [Summary("Removes your color if you have one")]
         public async Task RemoveColor()
         {
             SocketRole deletThis = null;
@@ -82,6 +84,7 @@ namespace LossyBotRewrite
         }
 
         [Command("custom")]
+        [Summary("Gives you a custom color from an supplied RGB value.\n`color custom [r] [g] [b]`")]
         public async Task CustomColor(int r, int g, int b)
         {
             XElement colorElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/CustomColor");

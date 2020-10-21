@@ -16,6 +16,7 @@ namespace LossyBotRewrite
     public class TwitterModule : ModuleBase<SocketCommandContext>
     {
         [Command("recent")]
+        [Summary("Gets the most recent tweet from a given user.\n`tweet recent [twitter handle]`")]
         public async Task TweetRecent(string id)
         {
             var latestTweet = Timeline.GetUserTimeline(id, 1).ToArray();
@@ -23,6 +24,7 @@ namespace LossyBotRewrite
         }
 
         [Command("random")]
+        [Summary("Gets a random tweet from the last 40 tweets of a given user.\n`tweet recent [twitter handle]`")]
         public async Task TweetRandom(string id)
         {
             Random rand = new Random();
@@ -49,6 +51,7 @@ namespace LossyBotRewrite
         }
 
         [Command("popular")]
+        [Summary("Gets the most popular tweet (most likes and retweets) from the last 40 tweets of a given user.\n`tweet popular [twitter handle]`")]
         public async Task TweetPopular(string id)
         {
             var user = Timeline.GetUserTimeline(id).ToArray();
