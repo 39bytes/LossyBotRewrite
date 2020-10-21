@@ -17,6 +17,8 @@ namespace LossyBotRewrite
     public class ImageModule : ModuleBase<SocketCommandContext>
     {
         [Command]
+        [Summary("Apply effects to images/gifs.\n" + 
+                "Valid effects: text \"[top text]\" \"[bottom text]\", magik, edge, wave, deepfry, jpgify, waaw, haah, contrast, negate, bulge, implode, drift, expand, explode, dance, angry, spectrum, lsd")]
         public async Task ImageCommand(params string[] args)
         {
             string url = args.Last();
