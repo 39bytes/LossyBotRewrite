@@ -3,11 +3,13 @@ using Discord.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LossyBotRewrite
 {
+    [Name("Help")]
     public class HelpModule : ModuleBase<SocketCommandContext>
     {
         private readonly CommandService _service;
@@ -15,6 +17,28 @@ namespace LossyBotRewrite
         public HelpModule(CommandService service)
         {
             _service = service;
+        }
+        [Command("help")]
+        public async Task HelpCommand()
+        {
+            var builder = new EmbedBuilder();
+            builder.WithColor(new Color(114, 137, 218));
+
+            builder.WithTitle("Command groups");
+
+            string modulesList = "";
+            foreach(var module in _service.Modules)
+            {
+                modulesList += module.Name;
+                modulesList += "\n";
+            }
+            builder.AddField(x =>
+            {
+                x.Name = "Modules";
+                x.Value = modulesList;
+                x.IsInline = false;
+            });
+            await ReplyAsync("", false, builder.Build());
         }
         [Command("help")]
         public async Task HelpCommand(string name)
