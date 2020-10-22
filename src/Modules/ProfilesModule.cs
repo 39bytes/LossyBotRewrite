@@ -19,6 +19,8 @@ namespace LossyBotRewrite
         private XDocument doc = XDocument.Load(Globals.path + "profiles.xml");
 
         [Command]
+        [Name("")]
+        [Summary("Gets your profile.")]
         public async Task ProfileView() //profile without user tagged, grabs own profile
         {
             CheckProfile(Context.User.Id.ToString()); //check the profile and see if it exists
@@ -27,6 +29,8 @@ namespace LossyBotRewrite
         }
 
         [Command]
+        [Name("")]
+        [Summary("Gets the profile of the user tagged.\n`profile [user]`")]
         public async Task ProfileView(SocketGuildUser user) //profile with user tagged, grabs their profile
         {
             CheckProfile(user.Id.ToString()); //check their profile and see if it exists

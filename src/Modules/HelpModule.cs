@@ -26,12 +26,15 @@ namespace LossyBotRewrite
             builder.WithTitle($"{module.Name} commands");
             foreach(var command in module.Commands)
             {
-                builder.AddField(x =>
+                if(command.Summary != null)
                 {
-                    x.Name = $"{module.Group} {command.Name}";
-                    x.Value = command.Summary;
-                    x.IsInline = false;
-                });
+                    builder.AddField(x =>
+                    {
+                        x.Name = $"{module.Group} {command.Name}";
+                        x.Value = command.Summary;
+                        x.IsInline = false;
+                    });
+                }
             }
             await ReplyAsync("", false, builder.Build());
         }
