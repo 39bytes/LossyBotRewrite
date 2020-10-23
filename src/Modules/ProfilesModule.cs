@@ -50,19 +50,17 @@ namespace LossyBotRewrite
                 await ReplyAsync(Context.User.Mention + " Input cannot exceed 130 characters!");
                 return;
             }
-            //try
-            //{
-                //doc.Root.Descendants().Where(x => x.Attribute("id").Value == Context.User.Id.ToString()).First().Element(field).SetValue(value);
-            XElement elem = doc.Root.XPathSelectElement($"./profile[@id='{Context.User.Id}']/{field}");
-            elem.SetValue(value);
-            doc.Save(Globals.path + "profiles.xml");
-
-            await ReplyAsync(Context.User.Mention, false, GetProfile(Context.User).Build());
-            //}
-            //catch (Exception) //throws when a node isn't found (or any other error)
-            //{
-            //    await ReplyAsync(Context.User.Mention + " Invalid edit!");
-            //}
+            try
+            {
+                XElement elem = doc.Root.XPathSelectElement($"./profile[@id='{Context.User.Id}']/{field}");
+                elem.SetValue(value);
+                doc.Save(Globals.path + "profiles.xml");
+                await ReplyAsync(Context.User.Mention, false, GetProfile(Context.User).Build());
+            }
+            catch (Exception) //throws when a node isn't found (or any other error)
+            {
+                await ReplyAsync(Context.User.Mention + " Invalid edit!");
+            }
         }
 
         private void CheckProfile(string userId)
