@@ -37,7 +37,7 @@ namespace LossyBotRewrite
         }
 
         [Command("add")]
-        [Summary("Gives you a color. Options: red, pink, purple, blue, teal, green, lime, yellow, orange")]
+        [Summary("Gives you a color. Options: red, pink, purple, blue, teal, green, lime, yellow, orange.\n`color add [color]`")]
         public async Task AddColor(string input)
         {
             if (!colors.Contains(input))
