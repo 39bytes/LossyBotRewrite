@@ -13,7 +13,7 @@ namespace LossyBotRewrite
     public class RandomModule : ModuleBase<SocketCommandContext>
     {
         [Command("rtd")]
-        [Summary("Generate a random number between 1 and the input number")]
+        [Summary("Generate a random number.\n`rtd [max number]")]
         public async Task Rtd(int sides)
         {
             if (sides > 1)
@@ -29,7 +29,7 @@ namespace LossyBotRewrite
         }
 
         [Command("choose")]
-        [Summary("Chooses a random option from the given options")]
+        [Summary("Chooses a random option.\n`choose [option1] [option2] [option3]...`")]
         public async Task Choose([Remainder] string input)
         {
             string[] choices = input.Split(' ');
@@ -38,7 +38,7 @@ namespace LossyBotRewrite
         }
 
         [Command("random")]
-        [Summary("Generates a random weapon, map, mode, private battle game, or user. random [option]")]
+        [Summary("Generates a random weapon, map, mode, private battle game, or user.\n`random [weapon/map/mode/pb/user]`")]
         public async Task Random(string input)
         {
             Random rand = new Random();
