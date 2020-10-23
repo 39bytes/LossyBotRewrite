@@ -17,6 +17,7 @@ namespace LossyBotRewrite
         XDocument doc = XDocument.Load(Globals.path + "tags.xml");
 
         [Command("view")]
+        [Summary("Gets a tag.\n`tag view [name]`")]
         public async Task TagView([Remainder] string name)
         {
             CheckServer(Context.Guild.Id);
@@ -35,6 +36,7 @@ namespace LossyBotRewrite
         }
 
         [Command("make")]
+        [Summary("Creates a tag.\n`tag make [name] [content]`")]
         public async Task CreateTag(string name, [Remainder]string content)
         {
             CheckServer(Context.Guild.Id);
@@ -58,6 +60,7 @@ namespace LossyBotRewrite
         }
         
         [Command("delete")]
+        [Summary("Deletes a tag.\n`tag delete [name]`")]
         public async Task DeleteTag([Remainder] string name)
         {
             CheckServer(Context.Guild.Id);
@@ -77,7 +80,8 @@ namespace LossyBotRewrite
         }
 
         [Command("info")]
-        public async Task TagInfo(string name)
+        [Summary("Get info about a tag.\n`tag info [name]`")]
+        public async Task TagInfo([Remainder] string name)
         {
             CheckServer(Context.Guild.Id);
             XElement tag = GetTag(name, Context.Guild.Id);
@@ -100,6 +104,7 @@ namespace LossyBotRewrite
         }
 
         [Command("search")]
+        [Summary("Find a tag.\n`tag search [name]`")]
         public async Task TagSearch([Remainder] string name)
         {
             var serverElem = doc.Root.Elements("server").Where(elem => elem.Attribute("id").Value == Context.Guild.Id.ToString()).First();
@@ -127,6 +132,7 @@ namespace LossyBotRewrite
         }
 
         [Command("random")]
+        [Summary("Get a random tag.\n`tag random`")]
         public async Task TagRandom()
         {
             CheckServer(Context.Guild.Id);

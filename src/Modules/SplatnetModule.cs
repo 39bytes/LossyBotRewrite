@@ -22,7 +22,7 @@ namespace LossyBotRewrite
         }
 
         [Command("maps")]
-        [Summary("Gets the current maps for turf, ranked, or league. Defaults to ranked if no argument given.")]
+        [Summary("Gets the current maps. Defaults to ranked.\n`maps [turf/ranked/league]`")]
         public async Task GetCurrentMaps(string mode = "")
         {
             var (schedule, currentRotation) = await _splatnetService.GetScheduleAsync();

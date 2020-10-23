@@ -15,7 +15,7 @@ namespace LossyBotRewrite
     {
         XDocument doc = XDocument.Load(Globals.path + "Servers.xml");
         [Command("toggle color")]
-        [Summary("Toggles whether or not custom colors are enabled for the server.")]
+        [Summary("Toggles whether or not custom colors are enabled for the server.\n`toggle color [true/false]`")]
         public async Task ToggleCustomColor(bool toggle)
         {
             XElement colorElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/CustomColor");
@@ -26,7 +26,7 @@ namespace LossyBotRewrite
         }
 
         [Command("set InVoiceChannel")]
-        [Summary("Sets the id of the in voice channel, a text channel for people who are currently in voice chat")]
+        [Summary("Sets the id of the in voice channel, a text channel for people who are currently in voice chat.\n`set InVoiceChannel [channel id]`")]
         public async Task SetInVoiceChannel(ulong id)
         {
             if (Context.Guild.GetTextChannel(id) == null)
