@@ -34,8 +34,8 @@ namespace LossyBotRewrite
             service.AddToQueue(video);
             Console.WriteLine($"Created voice service for {channel.GuildId}");
 
-            await service.PlayAudioAsync();
-            DestroyVoiceService(channel.GuildId);
+            await service.PlayAudioAsync(); //Play
+            DestroyVoiceService(channel.GuildId); //Then once the task completes destroy the service
         }
 
         public async Task CreateVoiceService(IVoiceChannel channel, IEnumerable<Video> playlist)
