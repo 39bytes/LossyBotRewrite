@@ -29,6 +29,7 @@ namespace LossyBotRewrite
             image = new MagickImageCollection();
             for (int i = 0; i < defaultFrameCount; i++)
                 image.Add(new MagickImage(frame));
+            frame.Dispose();
         }
 
         #region Effects

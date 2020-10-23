@@ -54,6 +54,7 @@ namespace LossyBotRewrite
                 }
             }
             await audioClient.StopAsync();
+            await Task.CompletedTask;
         }
 
         private async Task DownloadVideo(Video video)
@@ -61,7 +62,7 @@ namespace LossyBotRewrite
             YoutubeClient youtube = new YoutubeClient();
             var manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
 
-            var streamInfo = manifest.GetAudioOnly().First();
+            var streamInfo = manifest.GetAudioOnly().WithHighestBitrate();
 
             if(streamInfo != null)
             {

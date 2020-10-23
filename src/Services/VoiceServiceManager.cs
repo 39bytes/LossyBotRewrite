@@ -34,7 +34,8 @@ namespace LossyBotRewrite
             service.AddToQueue(video);
             Console.WriteLine($"Created voice service for {channel.GuildId}");
 
-            await service.PlayAudioAsync().ContinueWith(t => DestroyVoiceService(channel.GuildId)); //Play audio, then destroy the object once finished
+            await service.PlayAudioAsync();
+            DestroyVoiceService(channel.GuildId);
         }
 
         public async Task CreateVoiceService(IVoiceChannel channel, IEnumerable<Video> playlist)
@@ -44,7 +45,8 @@ namespace LossyBotRewrite
             service.AddPlaylistToQueue(playlist);
             Console.WriteLine($"Created voice service for {channel.GuildId}");
 
-            await service.PlayAudioAsync().ContinueWith(t => DestroyVoiceService(channel.GuildId)); //Play audio, then destroy the object once finished
+            await service.PlayAudioAsync();
+            DestroyVoiceService(channel.GuildId);
         }
         private void DestroyVoiceService(ulong id)
         {
