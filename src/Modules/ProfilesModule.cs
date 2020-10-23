@@ -40,7 +40,7 @@ namespace LossyBotRewrite
         }
 
         [Command("edit")]
-        [Summary("Sets the given field to the given value.")]
+        [Summary("Sets a profile field to a value.\n`profile edit [fc/sz/tc/rm/cb/main/other] [value]")]
         public async Task ProfileEdit(string field, [Remainder] string value)
         {
             CheckProfile(Context.User.Id.ToString());
