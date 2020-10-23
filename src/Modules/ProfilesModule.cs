@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Discord.WebSocket;
 using System.Threading.Tasks;
+using System.Xml.XPath;
 
 namespace LossyBotRewrite
 {
@@ -51,7 +52,9 @@ namespace LossyBotRewrite
             }
             try
             {
-                doc.Root.Descendants().Where(x => x.Attribute("id").Value == Context.User.Id.ToString()).First().Element(field).SetValue(value);
+                //doc.Root.Descendants().Where(x => x.Attribute("id").Value == Context.User.Id.ToString()).First().Element(field).SetValue(value);
+                XElement elem = doc.Root.XPathSelectElement($"./profile[@id='{Context.User.Id}']/{field}");
+                elem.SetValue(value);
                 doc.Save(Globals.path + "profiles.xml");
 
                 await ReplyAsync(Context.User.Mention, false, GetProfile(Context.User).Build());
