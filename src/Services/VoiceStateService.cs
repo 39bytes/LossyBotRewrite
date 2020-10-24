@@ -27,7 +27,8 @@ namespace LossyBotRewrite
             XDocument doc = XDocument.Load(Globals.path + "Servers.xml");
             if (oldState.VoiceChannel == null && newState.VoiceChannel != null) //joined voice channel
             {
-                XElement inVoiceChannelElem = doc.Root.XPathSelectElement($"./server[@id='{newState.VoiceChannel.Guild.Id}']/InVoiceChannel");
+                ulong guild = newState.VoiceChannel.Guild.Id;
+                XElement inVoiceChannelElem = doc.Root.XPathSelectElement($"./server[@id='{guild}']/InVoiceChannel");
                 if (inVoiceChannelElem.Value == "")
                     return;
 
