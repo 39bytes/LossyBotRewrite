@@ -44,11 +44,8 @@ namespace LossyBotRewrite
             }
             var typing = Context.Channel.EnterTypingState();
 
-            var watch = new Stopwatch();
-            watch.Start();
             IImageWrapper img = await ProcessImageAsync(url, args);
-            watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds);
+
             using (var stream = new MemoryStream())
             {
                 img.Write(stream);
@@ -68,16 +65,12 @@ namespace LossyBotRewrite
         private async Task<IImageWrapper> ProcessImageAsync(string url, string[] args)
         {
             IImageWrapper img;
-            var watch = new Stopwatch();
-            watch.Start();
 
             if (url.Contains(".gif"))
                 img = new GifWrapper(await DownloadImageAsync(url));
             else
                 img = new ImageWrapper(await DownloadImageAsync(url));
 
-            watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds);
             if (args[0].ToLower() == "text")
             {
                 img.Text(args[1], args[2]);

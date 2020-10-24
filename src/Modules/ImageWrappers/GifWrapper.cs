@@ -244,11 +244,7 @@ namespace LossyBotRewrite
         {
             for (int i = image.Count - 1; i >= 0; i--)
             {
-                var watch = new Stopwatch();
-                watch.Start();
                 image[i].Implode((double)i / 8, PixelInterpolateMethod.Average);
-                watch.Stop();
-                Console.WriteLine(watch.ElapsedMilliseconds);
             }
             return this;
         }

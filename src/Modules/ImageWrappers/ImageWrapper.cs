@@ -14,7 +14,6 @@ namespace LossyBotRewrite
         public ImageWrapper(byte[] data)
         {
             image = new MagickImage(data);
-            Console.WriteLine($"{image.Width} {image.Height}");
             if (image.Width > 1000 || image.Height > 1000)
                 image.Resize((Percentage)60);
         }
