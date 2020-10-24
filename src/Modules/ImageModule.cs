@@ -73,7 +73,13 @@ namespace LossyBotRewrite
 
             if (args[0].ToLower() == "text")
             {
-                img.Text(args[1], args[2]);
+                string top = "";
+                string bottom = "";
+                if(args.Length > 1)
+                    top = args[1];
+                if (args.Length > 2)
+                    top = args[2];
+                img.Text(top, bottom);
                 return img;
             }
 

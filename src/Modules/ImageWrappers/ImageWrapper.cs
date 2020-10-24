@@ -98,7 +98,7 @@ namespace LossyBotRewrite
                 Height = image.Height / 3,
                 Defines = new CaptionReadDefines()
                 {
-                    MaxFontPointsize = (topText.Length >= 20) ? 40 : 45
+                    MaxFontPointsize = (topText.Length >= 20) ? 45 : 50
                 }
             };
 
