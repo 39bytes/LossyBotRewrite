@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using ImageMagick;
@@ -12,7 +13,7 @@ namespace LossyBotRewrite
         public MagickImageCollection image;
         public static MagickFormat defaultFormat = MagickFormat.Gif;
 
-        const int defaultFrameCount = 21;
+        const int defaultFrameCount = 15;
 
         public GifWrapper(byte[] data)
         {
@@ -243,7 +244,11 @@ namespace LossyBotRewrite
         {
             for (int i = image.Count - 1; i >= 0; i--)
             {
+                var watch = new Stopwatch();
+                watch.Start();
                 image[i].Implode((double)i / 8, PixelInterpolateMethod.Average);
+                watch.Stop();
+                Console.WriteLine(watch.ElapsedMilliseconds);
             }
             return this;
         }
