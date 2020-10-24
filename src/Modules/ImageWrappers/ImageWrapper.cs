@@ -89,18 +89,15 @@ namespace LossyBotRewrite
             var readSettings = new MagickReadSettings
             {
                 StrokeColor = MagickColors.Black,
-                StrokeWidth = 1.5,
+                StrokeWidth = 1.75,
                 FillColor = MagickColors.White,
                 BackgroundColor = MagickColors.Transparent,
                 FontFamily = "Impact",
                 TextGravity = Gravity.North,
-                Width = image.Width,
-                Height = image.Height / 3,
-                Defines = new CaptionReadDefines()
-                {
-                    MaxFontPointsize = (topText.Length >= 20) ? 45 : 50
-                }
+                Width = (int)(image.Width * 0.9),
             };
+
+            readSettings.Height = image.Height / (3 + (image.Height / 300));
 
             image.Alpha(AlphaOption.Opaque);
 
@@ -108,7 +105,7 @@ namespace LossyBotRewrite
             {
                 using (var top = new MagickImage($"caption:{topText}", readSettings))
                 {
-                    image.Composite(top, 0, 0, CompositeOperator.Over);
+                    image.Composite(top, (int)(image.Width * 0.05), 0, CompositeOperator.Over);
                 }
             }
 
@@ -117,7 +114,7 @@ namespace LossyBotRewrite
                 readSettings.TextGravity = Gravity.South;
                 using (var bottom = new MagickImage($"caption:{bottomText}", readSettings))
                 {
-                    image.Composite(bottom, 0, image.Height - (int)readSettings.Height, CompositeOperator.Over);
+                    image.Composite(bottom, (int)(image.Width * 0.05), image.Height - (int)readSettings.Height, CompositeOperator.Over);
                 }
             }
         }
