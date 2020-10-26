@@ -56,38 +56,38 @@ namespace LossyBotRewrite
             await audioClient.StopAsync();
         }
 
-        private async Task<int> DownloadVideo(Video video)
+        private async Task DownloadVideo(Video video)
         {
-            var tcs = new TaskCompletionSource<int>();
-            var process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "youtube-dl",
-                    Arguments = $"{video.Id} -x --audio-format mp3 -o {id}.%(ext)s",
-                    CreateNoWindow = true
-                },
-                EnableRaisingEvents = true
-            };
-            process.Exited += (sender, args) =>
-            {
-                tcs.SetResult(process.ExitCode);
-                process.Dispose();
-            };
-            process.Start();
-
-            return await tcs.Task;
-            //YoutubeClient youtube = new YoutubeClient();
-            //var manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
-
-            //var streamInfo = manifest.GetAudioOnly().WithHighestBitrate();
-
-            //if(streamInfo != null)
+            //var tcs = new TaskCompletionSource<int>();
+            //var process = new Process()
             //{
-            //    var stream = youtube.Videos.Streams.GetAsync(streamInfo);
+            //    StartInfo = new ProcessStartInfo
+            //    {
+            //        FileName = "youtube-dl",
+            //        Arguments = $"{video.Id} -x --audio-format mp3 -o {id}.%(ext)s",
+            //        CreateNoWindow = true
+            //    },
+            //    EnableRaisingEvents = true
+            //};
+            //process.Exited += (sender, args) =>
+            //{
+            //    tcs.SetResult(process.ExitCode);
+            //    process.Dispose();
+            //};
+            //process.Start();
 
-            //    await youtube.Videos.Streams.DownloadAsync(streamInfo, $"{id}.mp3");
-            //}
+            //return await tcs.Task;
+            YoutubeClient youtube = new YoutubeClient();
+            var manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
+
+            var streamInfo = manifest.GetAudioOnly().WithHighestBitrate();
+
+            if (streamInfo != null)
+            {
+                var stream = youtube.Videos.Streams.GetAsync(streamInfo);
+
+                await youtube.Videos.Streams.DownloadAsync(streamInfo, $"{id}.mp3");
+            }
         }
 
         private Process CreateStream(string path)
