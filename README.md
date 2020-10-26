@@ -1,7 +1,7 @@
 # LossyBotRewrite
 
-A complete rewrite of Lossy, a Splatoon/general purpose discord bot.
-Original bot by @drB-dotjpg and I.
+A complete rewrite of Lossy, a Splatoon/general purpose discord bot.  
+Original bot by @drB-dotjpg and I.  
 Rewrite by me.
 
 # Features
