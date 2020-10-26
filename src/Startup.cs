@@ -38,6 +38,7 @@ namespace LossyBotRewrite
             provider.GetRequiredService<LoggingService>();      // Start the logging service
             provider.GetRequiredService<CommandHandler>(); 		// Start the command handler service
             provider.GetRequiredService<VoiceStateService>();
+            provider.GetRequiredService<TimerService>();
 
             await provider.GetRequiredService<StartupService>().StartAsync();       // Start the startup service
             await Task.Delay(-1);
@@ -62,6 +63,7 @@ namespace LossyBotRewrite
             .AddSingleton<VoiceStateService>()
             .AddSingleton<SplatnetService>()
             .AddSingleton<CompileService>()
+            .AddSingleton<TimerService>()
             .AddSingleton<Random>()
             .AddSingleton(Configuration);
         }

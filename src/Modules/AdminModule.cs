@@ -25,19 +25,40 @@ namespace LossyBotRewrite
             doc.Save(Globals.path + "Servers.xml");
         }
 
-        [Command("set InVoiceChannel")]
-        [Summary("Sets the id of the in voice channel, a text channel for people who are currently in voice chat.\n`set InVoiceChannel [channel id]`")]
-        public async Task SetInVoiceChannel(ulong id)
+        //[Command("set InVoiceChannel")]
+        //[Summary("Sets the id of the in voice channel, a text channel for people who are currently in voice chat.\n`set InVoiceChannel [channel id]`")]
+        //public async Task SetInVoiceChannel(ulong id)
+        //{
+        //    if (Context.Guild.GetTextChannel(id) == null)
+        //    {
+        //        await ReplyAsync("Invalid channel!");
+        //        return;
+        //    }
+
+        //    XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/InVoiceChannel");
+        //    roleElem.SetValue(id);
+        //    await ReplyAsync($"In voice channel set to `{id}`");
+        //    doc.Save(Globals.path + "Servers.xml");
+        //}
+
+        [Command("set")]
+        [Summary("Sets the id of a special channel.\n`set [InVoiceChannel/PrivateChannel] [channel id]`")]
+        public async Task SetChannel(string channelType, ulong id)
         {
+            if(channelType != "InVoiceChannel" && channelType != "PrivateChannel")
+            {
+                await ReplyAsync("Invalid channel type!");
+                return;
+            }
             if (Context.Guild.GetTextChannel(id) == null)
             {
                 await ReplyAsync("Invalid channel!");
                 return;
             }
 
-            XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/InVoiceChannel");
+            XElement roleElem = doc.Root.XPathSelectElement($"./server[@id='{Context.Guild.Id}']/{channelType}");
             roleElem.SetValue(id);
-            await ReplyAsync($"In voice channel set to `{id}`");
+            await ReplyAsync($"{channelType} set to `{id}`");
             doc.Save(Globals.path + "Servers.xml");
         }
     }
