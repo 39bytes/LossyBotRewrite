@@ -26,10 +26,12 @@ namespace LossyBotRewrite
         [Command("kill")]
         public async Task KillCommand(SocketGuildUser user)
         {
+            string assetsPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + Path.DirectorySeparatorChar + "Assets" + Path.DirectorySeparatorChar;
+
             byte[] data = await Globals.httpClient.GetByteArrayAsync(user.GetAvatarUrl(Discord.ImageFormat.Auto, 512));
             using(MagickImage pfp = new MagickImage(data))
             {
-                using (MagickImage kill = new MagickImage("kill.png"))
+                using (MagickImage kill = new MagickImage(assetsPath + "kill.png"))
                 {
                     kill.Resize(pfp.Width, pfp.Height);
                     pfp.Composite(kill, CompositeOperator.Over);
