@@ -34,7 +34,7 @@ namespace LossyBotRewrite
             }
             else
             {
-                assetsPath = $"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/Assets/";
+                assetsPath = $"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}Assets/";
             }
 
             byte[] data = await Globals.httpClient.GetByteArrayAsync(user.GetAvatarUrl(Discord.ImageFormat.Auto, 512));
