@@ -43,17 +43,22 @@ namespace LossyBotRewrite
                 url = lastAttachments.First().Attachments.First().Url;
             }
             var typing = Context.Channel.EnterTypingState();
-
-            IImageWrapper img = await ProcessImageAsync(url, args);
-
-            using (var stream = new MemoryStream())
+            try
             {
-                img.Write(stream);
-                var im = new MagickImage();
-                stream.Position = 0;
-                await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
+                IImageWrapper img = await ProcessImageAsync(url, args);
+
+                using (var stream = new MemoryStream())
+                {
+                    img.Write(stream);
+                    var im = new MagickImage();
+                    stream.Position = 0;
+                    await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
+                }
             }
-            typing.Dispose();
+            finally
+            {
+                typing.Dispose();
+            }
         }
 
         private async Task<byte[]> DownloadImageAsync(string url)
