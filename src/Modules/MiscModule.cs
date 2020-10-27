@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImageMagick;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace LossyBotRewrite
 {
@@ -26,7 +27,15 @@ namespace LossyBotRewrite
         [Command("kill")]
         public async Task KillCommand(SocketGuildUser user)
         {
-            string assetsPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + Path.DirectorySeparatorChar + "Assets" + Path.DirectorySeparatorChar;
+            string assetsPath;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                assetsPath = $"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}\\Assets\\"; 
+            }
+            else
+            {
+                assetsPath = $"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/Assets/";
+            }
 
             byte[] data = await Globals.httpClient.GetByteArrayAsync(user.GetAvatarUrl(Discord.ImageFormat.Auto, 512));
             using(MagickImage pfp = new MagickImage(data))
