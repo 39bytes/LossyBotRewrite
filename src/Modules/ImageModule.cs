@@ -95,12 +95,8 @@ namespace LossyBotRewrite
             {
                 if (url.Contains("tenor.com"))
                 {
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
                     string tenorGif = await GetTenorImageUrl(url);
                     img = new GifWrapper(await DownloadImageAsync(tenorGif));
-                    watch.Stop();
-                    Console.WriteLine(watch.ElapsedMilliseconds);
                 }
                 else if (url.Contains(".gif"))
                     img = new GifWrapper(await DownloadImageAsync(url));
