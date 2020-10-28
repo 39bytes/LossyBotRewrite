@@ -10,7 +10,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Reflection;
 using Discord;
-using AngleSharp.Html.Dom;
+using HtmlAgilityPack;
 
 namespace LossyBotRewrite
 {
@@ -72,13 +72,37 @@ namespace LossyBotRewrite
             return data;
         }
 
+        private async Task<string> GetTenorImageUrl(string tenorLink)
+        {
+            using (var response = await Globals.httpClient.GetAsync(tenorLink))
+            {
+                using (var content = response.Content)
+                {
+                    var result = await content.ReadAsStringAsync();
+                    var document = new HtmlDocument();
+                    document.LoadHtml(result);
+                    var node = document.DocumentNode.SelectSingleNode("/html/body/div/div/div[2]/div/div[1]/div[1]/div/div/div/div/img");
+                    return node.GetAttributeValue("src", "");
+                }
+            }
+        }
+
         private async Task<IImageWrapper?> ProcessImageAsync(string url, string[] args)
         {
             IImageWrapper? img;
 
             try
             {
-                if (url.Contains(".gif"))
+                if (url.Contains("tenor.com"))
+                {
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+                    string tenorGif = await GetTenorImageUrl(url);
+                    img = new GifWrapper(await DownloadImageAsync(tenorGif));
+                    watch.Stop();
+                    Console.WriteLine(watch.ElapsedMilliseconds);
+                }
+                else if (url.Contains(".gif"))
                     img = new GifWrapper(await DownloadImageAsync(url));
                 else
                     img = new ImageWrapper(await DownloadImageAsync(url));
