@@ -10,6 +10,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Reflection;
 using Discord;
+using AngleSharp.Html.Dom;
 
 namespace LossyBotRewrite
 {
@@ -45,7 +46,11 @@ namespace LossyBotRewrite
             var typing = Context.Channel.EnterTypingState();
             try
             {
-                IImageWrapper img = await ProcessImageAsync(url, args);
+                IImageWrapper? img = await ProcessImageAsync(url, args);
+                if(img == null)
+                {
+                    return;
+                }
 
                 using (var stream = new MemoryStream())
                 {
@@ -67,14 +72,23 @@ namespace LossyBotRewrite
             return data;
         }
 
-        private async Task<IImageWrapper> ProcessImageAsync(string url, string[] args)
+        private async Task<IImageWrapper?> ProcessImageAsync(string url, string[] args)
         {
-            IImageWrapper img;
+            IImageWrapper? img;
 
-            if (url.Contains(".gif"))
-                img = new GifWrapper(await DownloadImageAsync(url));
-            else
-                img = new ImageWrapper(await DownloadImageAsync(url));
+            try
+            {
+                if (url.Contains(".gif"))
+                    img = new GifWrapper(await DownloadImageAsync(url));
+                else
+                    img = new ImageWrapper(await DownloadImageAsync(url));
+            }
+            catch (Exception)
+            {
+                await ReplyAsync("Invalid url!");
+                return null;
+            }
+            
 
             if (args[0].ToLower() == "text")
             {
