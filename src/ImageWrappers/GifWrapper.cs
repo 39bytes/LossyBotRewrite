@@ -18,6 +18,10 @@ namespace LossyBotRewrite
         public GifWrapper(byte[] data)
         {
             image = new MagickImageCollection(data);
+            foreach(var img in image)
+            {
+                img.Quality = 50;
+            }
         }
 
         public GifWrapper(MagickImageCollection col)

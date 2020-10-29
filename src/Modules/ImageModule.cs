@@ -10,7 +10,6 @@ using System.Net;
 using System.Diagnostics;
 using System.Reflection;
 using Discord;
-using HtmlAgilityPack;
 
 namespace LossyBotRewrite
 {
@@ -18,6 +17,12 @@ namespace LossyBotRewrite
     [Group("image")]
     public class ImageModule : ModuleBase<SocketCommandContext>
     {
+        private readonly ImageService _imageService;
+        public ImageModule(ImageService service)
+        {
+            _imageService = service;
+        }
+
         [Command]
         [Summary("Apply effects to images/gifs.\n" + 
                 "Valid effects: text \"[top text]\" \"[bottom text]\", magik, edge, wave, deepfry, jpgify, waaw, haah, contrast, negate, bulge, implode, drift, expand, explode, dance, angry, spectrum, lsd")]
@@ -43,150 +48,36 @@ namespace LossyBotRewrite
                 }
                 url = lastAttachments.First().Attachments.First().Url;
             }
-            var typing = Context.Channel.EnterTypingState();
-            try
+
+            using (var typing = Context.Channel.EnterTypingState())
             {
-                IImageWrapper? img = await ProcessImageAsync(url, args);
-                if(img == null)
+                IImageWrapper? img;
+                
+                try
                 {
+                    var watch = new Stopwatch();
+                    watch.Start();
+                    img = await _imageService.ProcessImageAsync(url, args);
+                    watch.Stop();
+                    Console.WriteLine(watch.ElapsedMilliseconds);
+                }
+                catch (Exception e)
+                {
+                    await ReplyAsync(e.Message);
                     return;
                 }
 
                 using (var stream = new MemoryStream())
                 {
+                    var watch = new Stopwatch();
+                    watch.Start();
                     img.Write(stream);
-                    var im = new MagickImage();
+                    watch.Stop();
+                    Console.WriteLine(watch.ElapsedMilliseconds);
                     stream.Position = 0;
                     await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
                 }
             }
-            finally
-            {
-                typing.Dispose();
-            }
-        }
-
-        private async Task<byte[]> DownloadImageAsync(string url)
-        {
-            byte[] data = await Globals.httpClient.GetByteArrayAsync(url);
-            return data;
-        }
-
-        private async Task<string> GetTenorImageUrl(string tenorLink)
-        {
-            using (var response = await Globals.httpClient.GetAsync(tenorLink))
-            {
-                using (var content = response.Content)
-                {
-                    var result = await content.ReadAsStringAsync();
-                    var document = new HtmlDocument();
-                    document.LoadHtml(result);
-                    var node = document.DocumentNode.SelectSingleNode("/html/body/div/div/div[2]/div/div[1]/div[1]/div/div/div/div/img");
-                    return node.GetAttributeValue("src", "");
-                }
-            }
-        }
-
-        private async Task<IImageWrapper?> ProcessImageAsync(string url, string[] args)
-        {
-            IImageWrapper? img;
-
-            try
-            {
-                if (url.Contains("tenor.com"))
-                {
-                    string tenorGif = await GetTenorImageUrl(url);
-                    img = new GifWrapper(await DownloadImageAsync(tenorGif));
-                }
-                else if (url.Contains(".gif"))
-                    img = new GifWrapper(await DownloadImageAsync(url));
-                else
-                    img = new ImageWrapper(await DownloadImageAsync(url));
-            }
-            catch (Exception)
-            {
-                await ReplyAsync("Invalid url!");
-                return null;
-            }
-            
-
-            if (args[0].ToLower() == "text")
-            {
-                string top = "";
-                string bottom = "";
-                if(args.Length > 1)
-                    top = args[1];
-                if (args.Length > 2)
-                    bottom = args[2];
-                img.Text(top, bottom);
-                return img;
-            }
-
-            foreach (var effect in args)
-            {
-                switch (effect.ToLower())
-                {
-                    case "magik":
-                        img.Magik();
-                        break;
-                    case "edge":
-                        img.Edge();
-                        break;
-                    case "wave":
-                        img.Wave();
-                        break;
-                    case "deepfry":
-                        img.Deepfry();
-                        break;
-                    case "jpgify":
-                        img.Jpgify();
-                        break;
-                    case "waaw":
-                        img.Waaw();
-                        break;
-                    case "haah":
-                        img.Haah();
-                        break;
-                    case "contrast":
-                        img.Contrast();
-                        break;
-                    case "negate":
-                        img.Negate();
-                        break;
-                    case "bulge":
-                        img.Bulge();
-                        break;
-                    case "implode":
-                        img = img.Implode();
-                        break;
-                    case "drift":
-                        img = img.Drift();
-                        break;
-                    case "expand":
-                        img = img.Expand();
-                        break;
-                    case "explode":
-                        img = img.Explode();
-                        break;
-                    case "dance":
-                        img = img.Dance();
-                        break;
-                    case "angry":
-                        img = img.Angry();
-                        break;
-                    case "spectrum":
-                        img = img.Spectrum();
-                        break;
-                    case "lsd":
-                        img = img.Lsd();
-                        break;
-                    default:
-                        await ReplyAsync($"`Invalid effect '{effect}'.`");
-                        img.Dispose();
-                        throw new Exception("Invalid effect");
-                }
-            }
-            return img;
         }
     }
 }
