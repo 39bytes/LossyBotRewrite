@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using ImageMagick;
 using ImageMagick.Formats.Caption;
+using System.Threading.Tasks;
 
 namespace LossyBotRewrite
 {
@@ -18,10 +19,10 @@ namespace LossyBotRewrite
         public GifWrapper(byte[] data)
         {
             image = new MagickImageCollection(data);
-            foreach(var img in image)
+            Parallel.ForEach(image, (img) =>
             {
                 img.Quality = 50;
-            }
+            });
         }
 
         public GifWrapper(MagickImageCollection col)
@@ -41,97 +42,97 @@ namespace LossyBotRewrite
 
         public void Bulge()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].Implode(-1, PixelInterpolateMethod.Average);
-            }
+                currentFrame.Implode(-1, PixelInterpolateMethod.Average);
+            });
         }
 
         public void Contrast()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].BrightnessContrast((Percentage)40, (Percentage)75);
-            }
+                currentFrame.BrightnessContrast((Percentage)40, (Percentage)75);
+            });
         }
 
         public void Deepfry()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].Resize((Percentage)50);
-                image[i].AddNoise(NoiseType.MultiplicativeGaussian);
-                image[i].Modulate((Percentage)100, (Percentage)300, (Percentage)100);
-                image[i].Resize((Percentage)200);
-            }
+                currentFrame.Resize((Percentage)50);
+                currentFrame.AddNoise(NoiseType.MultiplicativeGaussian);
+                currentFrame.Modulate((Percentage)100, (Percentage)300, (Percentage)100);
+                currentFrame.Resize((Percentage)200);
+            });
         }
 
         public void Edge()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].Edge(3);
-            }
+                currentFrame.Edge(3);
+            });
         }
 
         public void Haah()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                MagickImage clone = new MagickImage(image[i]);
+                MagickImage clone = new MagickImage(currentFrame);
                 clone.Flip();
                 clone.Extent(clone.Width, clone.Height / 2);
-                image[i].Composite(clone, CompositeOperator.Over);
+                currentFrame.Composite(clone, CompositeOperator.Over);
 
                 clone.Dispose();
-            }
+            });
         }
         
 
         public void Jpgify()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].Quality = 5;
-            }
+                currentFrame.Quality = 5;
+            });
         }
 
         public void Magik()
         {
-            for(int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].LiquidRescale((Percentage)65, (Percentage)65);
-                image[i].Resize((Percentage)135, (Percentage)135);
-            }
+                currentFrame.LiquidRescale((Percentage)65, (Percentage)65);
+                currentFrame.Resize((Percentage)135, (Percentage)135);
+            });
         }
 
         public void Negate()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].Negate();
-            }
+                currentFrame.Negate();
+            });
         }
 
         public void Waaw()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                MagickImage clone = new MagickImage(image[i]);
+                MagickImage clone = new MagickImage(currentFrame);
                 clone.Flop();
                 clone.Extent(clone.Width / 2, clone.Height);
-                image[i].Composite(clone, CompositeOperator.Over);
+                currentFrame.Composite(clone, CompositeOperator.Over);
 
                 clone.Dispose();
-            }
+            });
         }
 
         public void Wave()
         {
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
-                image[i].Wave();
-            }
+                currentFrame.Wave();
+            });
         }
 
         public void Text(string topText, string bottomText)
@@ -181,12 +182,13 @@ namespace LossyBotRewrite
         public IImageWrapper Angry()
         {
             Random rand = new Random();
-            for (int i = 0; i < image.Count; i++)
+            Parallel.ForEach(image, (currentFrame) =>
             {
                 int randW = rand.Next(30) - 15;
                 int randH = rand.Next(30) - 15;
-                image[i].Roll(randW, randH);
-            }
+                currentFrame.Roll(randW, randH);
+            });
+
             return this;
         }
 
@@ -209,11 +211,12 @@ namespace LossyBotRewrite
         public IImageWrapper Drift()
         {
             double percent;
-            for (int i = image.Count - 1; i >= 0; i--)
+            Parallel.For(0, image.Count - 1, (pos) =>
             {
+                int i = image.Count - 1 - pos;
                 percent = 100 - (Math.Floor((double)100 / (image.Count + 1)) * i);
                 image[i].Resize((Percentage)percent);
-            }
+            });
 
             return this;
         }
@@ -224,32 +227,37 @@ namespace LossyBotRewrite
             int width = (image[0] as MagickImage).Width;
             int height = (image[0] as MagickImage).Height;
 
-            for (int i = image.Count - 1; i >= 0; i--)
+
+            Parallel.For(0, image.Count - 1, (pos) =>
             {
+                int i = image.Count - 1 - pos;
                 percent = 100 - (Math.Floor((double)100 / (image.Count + 1)) * i);
                 image[i].LiquidRescale((Percentage)percent);
                 image[i].Resize(width, height);
-                
-            }
+            });
+
             return this;
         }
 
         public IImageWrapper Explode()
         {
-            for (int i = image.Count - 1; i >= 0; i--)
+            Parallel.For(0, image.Count - 1, (pos) =>
             {
+                int i = image.Count - 1 - pos;
                 image[i].Implode((double)-i / 3, PixelInterpolateMethod.Average);
-            }
+            });
 
             return this;
         }
 
         public IImageWrapper Implode()
         {
-            for (int i = image.Count - 1; i >= 0; i--)
+            Parallel.For(0, image.Count - 1, (pos) =>
             {
+                int i = image.Count - 1 - pos;
                 image[i].Implode((double)i / 8, PixelInterpolateMethod.Average);
-            }
+            });
+
             return this;
         }
 

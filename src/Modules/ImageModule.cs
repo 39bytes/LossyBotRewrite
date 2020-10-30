@@ -52,14 +52,10 @@ namespace LossyBotRewrite
             using (var typing = Context.Channel.EnterTypingState())
             {
                 IImageWrapper? img;
-                
+                var watch = new Stopwatch();
                 try
                 {
-                    var watch = new Stopwatch();
-                    watch.Start();
                     img = await _imageService.ProcessImageAsync(url, args);
-                    watch.Stop();
-                    Console.WriteLine(watch.ElapsedMilliseconds);
                 }
                 catch (Exception e)
                 {
@@ -67,14 +63,8 @@ namespace LossyBotRewrite
                     return;
                 }
 
-                using (var stream = new MemoryStream())
+                using (Stream stream = await _imageService.WriteToStream(img))
                 {
-                    var watch = new Stopwatch();
-                    watch.Start();
-                    img.Write(stream);
-                    watch.Stop();
-                    Console.WriteLine(watch.ElapsedMilliseconds);
-                    stream.Position = 0;
                     await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
                 }
             }

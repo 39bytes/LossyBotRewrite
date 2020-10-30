@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using YoutubeExplode.Videos.Streams;
 
 namespace LossyBotRewrite
 {
@@ -106,6 +108,14 @@ namespace LossyBotRewrite
                 }
             }
             return img;
+        }
+
+        public async Task<Stream> WriteToStream(IImageWrapper img)
+        {
+            MemoryStream stream = new MemoryStream();
+            await Task.Run(() => img.Write(stream));
+            stream.Position = 0;
+            return stream;
         }
 
         private async Task<byte[]> DownloadImageAsync(string url)
