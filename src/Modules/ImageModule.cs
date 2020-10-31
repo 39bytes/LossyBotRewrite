@@ -55,7 +55,10 @@ namespace LossyBotRewrite
                 var watch = new Stopwatch();
                 try
                 {
+                    watch.Start();
                     img = await _imageService.ProcessImageAsync(url, args);
+                    watch.Stop();
+                    Console.WriteLine(watch.ElapsedMilliseconds);
                 }
                 catch (Exception e)
                 {
@@ -63,10 +66,13 @@ namespace LossyBotRewrite
                     return;
                 }
 
+                watch.Restart();
                 using (Stream stream = await _imageService.WriteToStream(img))
                 {
                     await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
                 }
+                watch.Stop();
+                Console.WriteLine(watch.ElapsedMilliseconds);
             }
         }
     }
