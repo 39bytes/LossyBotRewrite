@@ -228,20 +228,13 @@ namespace LossyBotRewrite
             int height = (image[0] as MagickImage).Height;
 
 
-            //Parallel.For(0, image.Count - 1, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2}, (pos) =>
-            //{
-            //    int i = image.Count - 1 - pos;
-            //    percent = 100 - (Math.Floor((double)100 / (image.Count + 1)) * i);
-            //    image[i].LiquidRescale((Percentage)percent);
-            //    image[i].Resize(width, height);
-            //});
-
-            for(int i = image.Count - 1; i >= 0; i--)
-            {
-                percent = 100 - (Math.Floor((double)100 / (image.Count + 1)) * i);
-                image[i].LiquidRescale((Percentage)percent);
-                image[i].Resize(width, height);
-            }
+            Parallel.For(0, image.Count - 1, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 }, (pos) =>
+             {
+                 int i = image.Count - 1 - pos;
+                 percent = 100 - (Math.Floor((double)100 / (image.Count + 1)) * i);
+                 image[i].LiquidRescale((Percentage)percent);
+                 image[i].Resize(width, height);
+             });
 
             return this;
         }
