@@ -16,6 +16,7 @@ namespace LossyBotRewrite
             image = new MagickImage(data);
             if (image.Width > 1000 || image.Height > 1000)
                 image.Resize((Percentage)60);
+            image.Quality = 50;
         }
 
         #region Effects
