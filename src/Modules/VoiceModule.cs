@@ -25,7 +25,7 @@ namespace LossyBotRewrite
             _voiceManager = manager;
         }
 
-        [Command("play")]
+        [Command("play", RunMode = RunMode.Async)]
         [Summary("Plays a song in your current voice channel or adds it to the queue.\n`voice play [youtube url]` ")]
         public async Task VoicePlay(string url)
         {
@@ -54,7 +54,7 @@ namespace LossyBotRewrite
             }
         }
 
-        [Command("playlist")]
+        [Command("playlist", RunMode = RunMode.Async)]
         [Summary("Plays an entire youtube playlist.\n`voice playlist [playlist url]`")]
         public async Task VoicePlaylist(params string[] args)
         {
