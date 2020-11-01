@@ -48,7 +48,7 @@ namespace LossyBotRewrite
             await service.PlayAudioAsync();
             DestroyVoiceService(channel.GuildId);
         }
-        private void DestroyVoiceService(ulong id)
+        public void DestroyVoiceService(ulong id)
         {
             activeVoiceServices.Remove(id);
             File.Delete($"{id}.mp3");
@@ -77,6 +77,8 @@ namespace LossyBotRewrite
 
             using(Process process = Process.GetProcessById(id))
             {
+                if(process == null)
+                    return;
                 if(process.ProcessName == "ffmpeg")
                 {
                     process.Kill();

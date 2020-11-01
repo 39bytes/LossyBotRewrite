@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Net;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -44,9 +45,10 @@ namespace LossyBotRewrite
                 {
                     if (oldState.VoiceChannel.Id == _voiceManager.GetServiceVoiceChannelId(guild))
                     {
-                        if (oldState.VoiceChannel.Users.Count == 1) //only the bot left in there
+                        if (oldState.VoiceChannel.Users.Count == 1 || user.Id == _client.CurrentUser.Id) //only the bot left in there or it got dced forcefully
                         {
                             _voiceManager.ForceStopService(guild); //kill the service
+                            _voiceManager.DestroyVoiceService(guild);
                         }
                     }
                 }
