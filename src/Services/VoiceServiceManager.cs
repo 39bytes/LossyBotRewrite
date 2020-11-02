@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Audio;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,9 @@ namespace LossyBotRewrite
             return activeVoiceServices.ContainsKey(guildId);
         }
 
-        public async Task CreateVoiceService(IVoiceChannel channel, Video video)
+        public async Task CreateVoiceService(IVoiceChannel channel, Video video, IAudioClient audioClient)
         {
-            var service = new VoiceService(_client, channel, channel.GuildId);
+            var service = new VoiceService(_client, channel, channel.GuildId, audioClient);
             activeVoiceServices.Add(channel.GuildId, service);
             service.AddToQueue(video);
             Console.WriteLine($"Created voice service for {channel.GuildId}");
@@ -38,9 +39,9 @@ namespace LossyBotRewrite
             DestroyVoiceService(channel.GuildId); //Then once the task completes destroy the service
         }
 
-        public async Task CreateVoiceService(IVoiceChannel channel, IEnumerable<Video> playlist)
+        public async Task CreateVoiceService(IVoiceChannel channel, IEnumerable<Video> playlist, IAudioClient audioClient)
         {
-            var service = new VoiceService(_client, channel, channel.GuildId);
+            var service = new VoiceService(_client, channel, channel.GuildId, audioClient);
             activeVoiceServices.Add(channel.GuildId, service);
             service.AddPlaylistToQueue(playlist);
             Console.WriteLine($"Created voice service for {channel.GuildId}");

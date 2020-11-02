@@ -16,30 +16,38 @@ namespace LossyBotRewrite
     {
         private readonly DiscordSocketClient _client;
         private ulong id;
+        private IAudioClient _audioClient;
 
         public IVoiceChannel VoiceChannel { get; private set; }
         public Queue<Video> Queue { get; private set; }
         public int FFmpegId { get; private set; }
         public Video CurrentlyPlaying { get; private set; }
 
-        public VoiceService(DiscordSocketClient client, IVoiceChannel channel, ulong guildId)
+        public VoiceService(DiscordSocketClient client, IVoiceChannel channel, ulong guildId, IAudioClient audioClient)
         {
             _client = client;
             id = guildId;
             VoiceChannel = channel;
+            _audioClient = audioClient;
             Queue = new Queue<Video>();
         }
 
         public async Task PlayAudioAsync()
         {
-            var audioClient = await VoiceChannel.ConnectAsync(selfDeaf: true);
             while (Queue.Count != 0)
             {
                 CurrentlyPlaying = Queue.Dequeue(); //dequeue the latest video
-                await DownloadVideo(CurrentlyPlaying); 
+                try
+                {
+                    await DownloadVideo(CurrentlyPlaying);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
                 using (var ffmpeg = CreateStream($"{id}.mp3"))
                 using (var output = ffmpeg.StandardOutput.BaseStream)
-                using (var discord = audioClient.CreatePCMStream(AudioApplication.Mixed))
+                using (var discord = _audioClient.CreatePCMStream(AudioApplication.Mixed))
                 {
                     FFmpegId = ffmpeg.Id;
                     try
@@ -53,7 +61,7 @@ namespace LossyBotRewrite
                     }
                 }
             }
-            await audioClient.StopAsync();
+            await _audioClient.StopAsync();
         }
 
         private async Task DownloadVideo(Video video)

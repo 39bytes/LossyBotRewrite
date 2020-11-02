@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Audio;
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
@@ -29,7 +30,8 @@ namespace LossyBotRewrite
         [Summary("Plays a song in your current voice channel or adds it to the queue.\n`voice play [youtube url]` ")]
         public async Task VoicePlay(string url)
         {
-            if((Context.User as IGuildUser).VoiceChannel == null)
+            var channel = (Context.User as IGuildUser).VoiceChannel;
+            if (channel == null)
             {
                 await ReplyAsync("Enter a voice channel to use voice commands!");
                 return;
@@ -44,13 +46,15 @@ namespace LossyBotRewrite
             }
 
             await ReplyAsync("", false, GetVideoEmbed(info).Build());
+
             if (_voiceManager.HasActiveService(Context.Guild.Id))
             {
                 _voiceManager.AddVideoToServiceQueue(Context.Guild.Id, info);
             }
             else
             {
-                await _voiceManager.CreateVoiceService((Context.User as IGuildUser).VoiceChannel, info);
+                IAudioClient audioClient = await channel.ConnectAsync(selfDeaf: true);
+                await _voiceManager.CreateVoiceService(channel, info, audioClient);
             }
         }
 
@@ -58,7 +62,8 @@ namespace LossyBotRewrite
         [Summary("Plays an entire youtube playlist.\n`voice playlist [playlist url]`")]
         public async Task VoicePlaylist(params string[] args)
         {
-            if ((Context.User as IGuildUser).VoiceChannel == null)
+            var channel = (Context.User as IGuildUser).VoiceChannel;
+            if (channel == null)
             {
                 await ReplyAsync("Enter a voice channel to use voice commands!");
                 return;
@@ -91,7 +96,8 @@ namespace LossyBotRewrite
             }
             else
             {
-                await _voiceManager.CreateVoiceService((Context.User as IGuildUser).VoiceChannel, videos);
+                IAudioClient audioClient = await channel.ConnectAsync(selfDeaf: true);
+                await _voiceManager.CreateVoiceService(channel, videos, audioClient);
             }
 
         }
