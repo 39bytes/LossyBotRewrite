@@ -50,7 +50,7 @@ namespace LossyBotRewrite
             {
                 LogLevel = LogSeverity.Info,
                 MessageCacheSize = 1000,
-                GatewayIntents = 
+                GatewayIntents =
                         GatewayIntents.Guilds |
                         GatewayIntents.GuildMembers |
                         GatewayIntents.GuildMessageReactions |
