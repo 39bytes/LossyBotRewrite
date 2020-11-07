@@ -50,13 +50,6 @@ namespace LossyBotRewrite
             {
                 LogLevel = LogSeverity.Info,
                 MessageCacheSize = 1000,
-                GatewayIntents =
-                        GatewayIntents.Guilds |
-                        GatewayIntents.GuildMembers |
-                        GatewayIntents.GuildMessageReactions |
-                        GatewayIntents.GuildMessages |
-                        GatewayIntents.GuildVoiceStates |
-                        GatewayIntents.DirectMessages
             }))
             .AddSingleton(new CommandService(new CommandServiceConfig
             {
