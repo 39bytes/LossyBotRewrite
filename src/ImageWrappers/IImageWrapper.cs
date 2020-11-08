@@ -26,8 +26,6 @@ namespace LossyBotRewrite
         public IImageWrapper Spectrum();
         public IImageWrapper Lsd();
 
-        public void Dispose();
-
         public void Write(MemoryStream stream);
 
         public void Write();

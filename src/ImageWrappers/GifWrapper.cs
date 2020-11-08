@@ -227,7 +227,6 @@ namespace LossyBotRewrite
             int width = (image[0] as MagickImage).Width;
             int height = (image[0] as MagickImage).Height;
 
-
             Parallel.For(0, image.Count - 1, (pos) =>
             {
                 int i = image.Count - 1 - pos;
@@ -294,14 +293,10 @@ namespace LossyBotRewrite
             return this;
         }
 
-        public void Dispose()
-        {
-            image.Dispose();
-        }
-
         public void Write(MemoryStream stream)
         {
             image.Write(stream, defaultFormat);
+            image.Dispose();
         }
         public void Write()
         {

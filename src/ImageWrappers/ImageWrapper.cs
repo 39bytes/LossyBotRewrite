@@ -177,14 +177,11 @@ namespace LossyBotRewrite
             return gif.Spectrum();
         }
         #endregion
-        public void Dispose()
-        {
-            image.Dispose();
-        }
 
         public void Write(MemoryStream stream)
         {
             image.Write(stream, defaultFormat);
+            image.Dispose();
         }
 
         public void Write()

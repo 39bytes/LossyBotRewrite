@@ -103,7 +103,6 @@ namespace LossyBotRewrite
                         img = img.Lsd();
                         break;
                     default:
-                        img.Dispose();
                         throw new Exception($"Invalid effect `{effect}`");
                 }
             }
