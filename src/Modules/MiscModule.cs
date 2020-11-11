@@ -43,5 +43,29 @@ namespace LossyBotRewrite
                 }
             }
         }
+
+        [Command("reset", RunMode = RunMode.Async)]
+        public async Task KillSwitch() //this is totally overdone but I think the reset command should look cool idk why
+        {
+            if (Context.User.Id == 201922904781357057
+             || Context.User.Id == 82195381156315136
+             || Context.User.Id == 244152605561847808)
+            {
+                int timer = 3;
+                var message = await ReplyAsync($"Restarting app in {timer}.");
+                do
+                {
+                    await Task.Delay(1000);
+                    await message.ModifyAsync(x => x.Content = $"Restarting app in {timer}.");
+                    timer--;
+                } while (timer != 0);
+                await message.ModifyAsync(x => x.Content = $"Goodbye");
+                Environment.Exit(1);
+            }
+            else
+            {
+                await ReplyAsync(Context.User.Mention + " You cannot use this command.");
+            }
+        }
     }
 }
