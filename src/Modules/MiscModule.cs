@@ -8,11 +8,17 @@ using ImageMagick;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Linq;
 
 namespace LossyBotRewrite
 {
     public class MiscModule : ModuleBase<SocketCommandContext>
     {
+        private readonly ImageService _service;
+        public MiscModule(ImageService service)
+        {
+            _service = service;
+        }
         [Command("pfp")]
         public async Task PfpCommand()
         {
@@ -46,40 +52,26 @@ namespace LossyBotRewrite
         }
         
         [Command("what")]
-        public async Task WhatVideoCommand(string imageUrl)
+        public async Task WhatVideoCommand(string imageUrl = "")
         {
             long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            string videoPath = Globals.path + "what.mp4";
-            byte[] data = await Globals.httpClient.GetByteArrayAsync(imageUrl);
-            int height;
-            int width;
-            using(MagickImage img = new MagickImage(data))
+            if (imageUrl == "")
             {
-                img.Resize(new MagickGeometry(432,243));
-                height = img.Height;
-                width = img.Width;
-                img.Write($"{now}.png", MagickFormat.Jpg);
+                if (Context.Message.Attachments.Count == 1)
+                {
+                    imageUrl = Context.Message.Attachments.First().Url;
+                }
+                else
+                {
+                    await ReplyAsync("Include an image!");
+                    return;
+                }
             }
 
-            int topLeftX = (432 - width) / 2 + 24;
-            int topLeftY = (243 - height) / 2 + 43;
-
-            var processInfo = new ProcessStartInfo
-            {
-                FileName = "ffmpeg",
-                Arguments = $"-i {videoPath} -strict 2 -i {now}.png -filter_complex \"[0:v][1:v] overlay={topLeftX}:{topLeftY}:enable='between(t,0,8.2)'\" " +
-                            $"-c:a copy {now}.mp4",
-                UseShellExecute = false,
-                RedirectStandardOutput = false
-            };
-            using(var process = Process.Start(processInfo))
-            {
-                process.WaitForExit();
-                await Context.Channel.SendFileAsync($"{now}.mp4");
-            }
+            await _service.ProcessWhatVideoAsync(imageUrl, now);
+            await Context.Channel.SendFileAsync($"{now}.mp4");
             File.Delete($"{now}.png");
             File.Delete($"{now}.mp4");
-            
         }
 
         [Command("reset", RunMode = RunMode.Async)]

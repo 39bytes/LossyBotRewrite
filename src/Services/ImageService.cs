@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using ImageMagick;
 using YoutubeExplode.Videos.Streams;
 
 namespace LossyBotRewrite
@@ -107,6 +109,37 @@ namespace LossyBotRewrite
                 }
             }
             return img;
+        }
+
+        public async Task ProcessWhatVideoAsync(string imageUrl, long now)
+        {
+            byte[] data = await DownloadImageAsync(imageUrl);
+            string videoPath = Globals.path + "what.mp4";
+            int height;
+            int width;
+            using (MagickImage img = new MagickImage(data))
+            {
+                img.Resize(new MagickGeometry(432, 243));
+                height = img.Height;
+                width = img.Width;
+                img.Write($"{now}.png", MagickFormat.Jpg);
+            }
+
+            int topLeftX = (432 - width) / 2 + 24;
+            int topLeftY = (243 - height) / 2 + 43;
+
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = $"-i {videoPath} -strict 2 -i {now}.png -filter_complex \"[0:v][1:v] overlay={topLeftX}:{topLeftY}:enable='between(t,0,8.2)'\" " +
+                            $"-c:a copy {now}.mp4",
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            using (var process = Process.Start(processInfo))
+            {
+                process.WaitForExit();
+            }
         }
 
         public async Task<Stream> WriteToStream(IImageWrapper img)
