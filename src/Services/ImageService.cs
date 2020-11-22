@@ -122,7 +122,7 @@ namespace LossyBotRewrite
                 img.Resize(new MagickGeometry(432, 243));
                 height = img.Height;
                 width = img.Width;
-                img.Write($"{now}.png", MagickFormat.Jpg);
+                img.Write($"{now}.jpg", MagickFormat.Jpg);
             }
 
             int topLeftX = (432 - width) / 2 + 24;
