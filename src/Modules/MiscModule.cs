@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ImageMagick;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace LossyBotRewrite
 {
@@ -42,6 +43,43 @@ namespace LossyBotRewrite
                     await Context.Channel.SendFileAsync(stream, "killed.png");
                 }
             }
+        }
+        
+        [Command("what")]
+        public async Task WhatVideoCommand(string imageUrl)
+        {
+            long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            string videoPath = Globals.path + "what.mp4";
+            byte[] data = await Globals.httpClient.GetByteArrayAsync(imageUrl);
+            int height;
+            int width;
+            using(MagickImage img = new MagickImage(data))
+            {
+                img.Resize(new MagickGeometry(432,243));
+                height = img.Height;
+                width = img.Width;
+                img.Write($"{now}.png", MagickFormat.Jpg);
+            }
+
+            int topLeftX = (432 - width) / 2 + 24;
+            int topLeftY = (243 - height) / 2 + 43;
+
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = $"-i {videoPath} -strict 2 -i {now}.png -filter_complex \"[0:v][1:v] overlay={topLeftX}:{topLeftY}:enable='between(t,0,8.2)'\" " +
+                            $"-c:a copy {now}.mp4",
+                UseShellExecute = false,
+                RedirectStandardOutput = false
+            };
+            using(var process = Process.Start(processInfo))
+            {
+                process.WaitForExit();
+                await Context.Channel.SendFileAsync($"{now}.mp4");
+            }
+            File.Delete($"{now}.png");
+            File.Delete($"{now}.mp4");
+            
         }
 
         [Command("reset", RunMode = RunMode.Async)]
