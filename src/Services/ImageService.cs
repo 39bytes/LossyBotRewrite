@@ -131,7 +131,7 @@ namespace LossyBotRewrite
             var processInfo = new ProcessStartInfo
             {
                 FileName = "ffmpeg",
-                Arguments = $"-i {videoPath} -strict 2 -i {now}.png -filter_complex \"[0:v][1:v] overlay={topLeftX}:{topLeftY}:enable='between(t,0,8.2)'\" " +
+                Arguments = $"-i {videoPath} -strict 2 -i {now}.jpg -filter_complex \"[0:v][1:v] overlay={topLeftX}:{topLeftY}:enable='between(t,0,8.2)'\" " +
                             $"-c:a copy {now}.mp4",
                 UseShellExecute = true,
                 WindowStyle = ProcessWindowStyle.Hidden
