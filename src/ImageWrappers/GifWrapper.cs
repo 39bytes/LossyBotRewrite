@@ -299,6 +299,10 @@ namespace LossyBotRewrite
             image.Write(stream, defaultFormat);
             image.Dispose();
         }
+        public void Dispose()
+        {
+            image.Dispose();
+        }
         public void Write()
         {
             image.Write("lossyimage." + defaultFormat.ToString().ToLower());

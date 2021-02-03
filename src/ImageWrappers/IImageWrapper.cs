@@ -30,6 +30,8 @@ namespace LossyBotRewrite
 
         public void Write();
 
+        public void Dispose();
+
         public MagickFormat GetFormat();
     }
 }

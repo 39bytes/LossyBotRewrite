@@ -41,8 +41,9 @@ namespace LossyBotRewrite
                 {
                     await DownloadVideo(CurrentlyPlaying);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     continue;
                 }
                 using (var ffmpeg = CreateStream($"{id}.mp3"))

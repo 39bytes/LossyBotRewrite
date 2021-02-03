@@ -51,7 +51,7 @@ namespace LossyBotRewrite
 
             using (var typing = Context.Channel.EnterTypingState())
             {
-                IImageWrapper? img;
+                IImageWrapper? img = null;
                 try
                 {
                     img = await _imageService.ProcessImageAsync(url, args);
@@ -59,6 +59,10 @@ namespace LossyBotRewrite
                 catch (Exception e)
                 {
                     await ReplyAsync(e.Message);
+                    if (img != null)
+                    {
+                        img.Dispose();
+                    }
                     return;
                 }
 

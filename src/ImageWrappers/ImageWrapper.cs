@@ -189,6 +189,11 @@ namespace LossyBotRewrite
             image.Write("lossyimage." + defaultFormat.ToString().ToLower());
         }
 
+        public void Dispose()
+        {
+            image.Dispose();
+        }
+
         public MagickFormat GetFormat()
         {
             return defaultFormat;

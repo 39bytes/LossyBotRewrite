@@ -16,23 +16,15 @@ namespace LossyBotRewrite
         {
             IImageWrapper? img;
 
-            try
+            if (url.Contains("tenor.com"))
             {
-                if (url.Contains("tenor.com"))
-                {
-                    string tenorGif = await GetTenorImageUrl(url);
-                    img = new GifWrapper(await DownloadImageAsync(tenorGif));
-                }
-                else if (url.Contains(".gif"))
-                    img = new GifWrapper(await DownloadImageAsync(url));
-                else
-                    img = new ImageWrapper(await DownloadImageAsync(url));
+                string tenorGif = await GetTenorImageUrl(url);
+                img = new GifWrapper(await DownloadImageAsync(tenorGif));
             }
-            catch (Exception)
-            {
-                throw new Exception("Invalid url!"); //lol
-            }
-
+            else if (url.Contains(".gif"))
+                img = new GifWrapper(await DownloadImageAsync(url));
+            else
+                img = new ImageWrapper(await DownloadImageAsync(url));
 
             if (args[0].ToLower() == "text")
             {

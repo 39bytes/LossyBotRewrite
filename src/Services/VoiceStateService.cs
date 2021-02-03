@@ -47,13 +47,7 @@ namespace LossyBotRewrite
                 {
                     if (oldVC.Id == _voiceManager.GetServiceVoiceChannelId(guild))
                     {
-                        if(user.Id == _client.CurrentUser.Id)
-                        {
-                            _voiceManager.ForceStopService(guild); //kill the service and destroy it
-                            _voiceManager.DestroyVoiceService(guild);
-                            return;
-                        }
-                        else if (oldVC.Users.Count == 1) //only the bot left in there
+                        if (oldVC.Users.Count == 1) //only the bot left in there
                         {
                             _voiceManager.ForceStopService(guild); //kill the service
                         }
@@ -73,12 +67,6 @@ namespace LossyBotRewrite
                 {
                     if (oldVC.Id == _voiceManager.GetServiceVoiceChannelId(guild))
                     {
-                        if (user.Id == _client.CurrentUser.Id)
-                        {
-                            _voiceManager.ForceStopService(guild); //kill the service and destroy it
-                            _voiceManager.DestroyVoiceService(guild);
-                            return;
-                        }
                         if (oldVC.Users.Count == 1) //only the bot left in there
                         {
                             _voiceManager.ForceStopService(guild); //kill the service
