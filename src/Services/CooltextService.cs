@@ -19,8 +19,7 @@ namespace LossyBotRewrite
             service.HideCommandPromptWindow = true;
 
             ChromeOptions options = new ChromeOptions();
-            options.AddArgument("headless");
-            options.AddArgument("--log-level=3");
+            options.AddArguments("headless", "--log-level=3", "--no-sandbox");
 
             driver = new ChromeDriver(service, options); //look in executing dir
         }
