@@ -14,6 +14,7 @@ namespace LossyBotRewrite
 
         public static HttpClient httpClient = new HttpClient();
 
+
         public static void Shuffle<T>(this IList<T> list)
         {
             Random random = new Random();
