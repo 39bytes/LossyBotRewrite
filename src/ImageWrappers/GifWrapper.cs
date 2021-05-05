@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using ImageMagick;
-using ImageMagick.Formats.Caption;
+using ImageMagick.Formats;
 using System.Threading.Tasks;
 
 namespace LossyBotRewrite

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ImageMagick;
-using ImageMagick.Formats.Caption;
+using ImageMagick.Formats;
 
 namespace LossyBotRewrite
 {

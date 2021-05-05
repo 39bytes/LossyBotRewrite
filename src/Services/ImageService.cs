@@ -133,6 +133,37 @@ namespace LossyBotRewrite
                 process.WaitForExit();
             }
         }
+        public async Task AddFnafSoundAsync(string imageUrl, long now)
+        {
+            byte[] data = await DownloadImageAsync(imageUrl);
+            string audioPath = Globals.path + "fnaf.mp3";
+            using (MagickImage img = new MagickImage(data))
+            {
+                img.Write($"{now}fnaf.png", MagickFormat.Png);
+            }
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = $"-loop 1 -y -i {now}fnaf.png -i {audioPath} -t 6 -vsync vfr {now}temp.mp4",
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            using (var process = Process.Start(processInfo))
+            {
+                process.WaitForExit();
+            }
+            //var thumbnailProcessInfo = new ProcessStartInfo
+            //{
+            //    FileName = "ffmpeg",
+            //    Arguments = $"-i {now}temp.mp4 -i {now}fnaf.png -map 1 -map 0 -c copy -disposition:0 attached_pic {now}fnaf.mp4",
+            //    UseShellExecute = true,
+            //    WindowStyle = ProcessWindowStyle.Hidden
+            //};
+            //using (var process = Process.Start(thumbnailProcessInfo))
+            //{
+            //    process.WaitForExit();
+            //}
+        }
 
         public async Task<Stream> WriteToStream(IImageWrapper img)
         {

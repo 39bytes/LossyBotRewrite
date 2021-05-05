@@ -70,8 +70,32 @@ namespace LossyBotRewrite
 
             await _service.ProcessWhatVideoAsync(imageUrl, now);
             await Context.Channel.SendFileAsync($"{now}.mp4");
-            File.Delete($"{now}.png");
+            File.Delete($"{now}.jpg");
             File.Delete($"{now}.mp4");
+        }
+
+        [Command("fnaf")]
+        public async Task FnafVideoCommand(string imageUrl = "")
+        {
+            long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (imageUrl == "")
+            {
+                if (Context.Message.Attachments.Count == 1)
+                {
+                    imageUrl = Context.Message.Attachments.First().Url;
+                }
+                else
+                {
+                    await ReplyAsync("Include an image!");
+                    return;
+                }
+            }
+
+            await _service.AddFnafSoundAsync(imageUrl, now);
+            await Context.Channel.SendFileAsync($"{now}fnaf.mp4");
+            File.Delete($"{now}fnaf.png");
+            File.Delete($"{now}temp.mp4");
+            File.Delete($"{now}fnaf.mp4");
         }
 
         [Command("reset", RunMode = RunMode.Async)]
