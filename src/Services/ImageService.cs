@@ -133,7 +133,7 @@ namespace LossyBotRewrite
                 process.WaitForExit();
             }
         }
-        public async Task AddFnafSoundAsync(string imageUrl, long now)
+        public async Task AddFnafSoundAsync(string imageUrl, long now) //broken
         {
             byte[] data = await DownloadImageAsync(imageUrl);
             string audioPath = Globals.path + "fnaf.mp3";
