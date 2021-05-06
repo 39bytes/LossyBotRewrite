@@ -19,6 +19,10 @@ namespace LossyBotRewrite
         public async Task Cooltext(string text)
         {
             string filename = await _cooltextService.GetBurningTextAsync(text);
+            if(filename == "")
+            {
+                await ReplyAsync("`Request timed out. (text is probably too long)`");
+            }
             await Context.Channel.SendFileAsync(filename);
             File.Delete(filename);
         }
