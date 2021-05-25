@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="2.3.0" />
+    <PackageReference Include="Discord.Net" Version="2.4.0" />
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.30" />
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="7.23.1" />
@@ -19,6 +19,6 @@
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="System.Linq.Async" Version="5.0.0" />
     <PackageReference Include="TweetinviAPI" Version="4.0.3" />
-    <PackageReference Include="YoutubeExplode" Version="5.1.9" />
+    <PackageReference Include="YoutubeExplode" Version="6.0.1" />
   </ItemGroup>
 </Project>

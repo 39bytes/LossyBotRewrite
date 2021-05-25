@@ -19,9 +19,9 @@ namespace LossyBotRewrite
         private IAudioClient _audioClient;
 
         public IVoiceChannel VoiceChannel { get; private set; }
-        public Queue<Video> Queue { get; private set; }
+        public Queue<IVideo> Queue { get; private set; }
         public int FFmpegId { get; private set; }
-        public Video CurrentlyPlaying { get; private set; }
+        public IVideo CurrentlyPlaying { get; private set; }
 
         public VoiceService(DiscordSocketClient client, IVoiceChannel channel, ulong guildId, IAudioClient audioClient)
         {
@@ -29,7 +29,7 @@ namespace LossyBotRewrite
             id = guildId;
             VoiceChannel = channel;
             _audioClient = audioClient;
-            Queue = new Queue<Video>();
+            Queue = new Queue<IVideo>();
         }
 
         public async Task PlayAudioAsync()
@@ -65,7 +65,7 @@ namespace LossyBotRewrite
             await _audioClient.StopAsync();
         }
 
-        private async Task DownloadVideo(Video video)
+        private async Task DownloadVideo(IVideo video)
         {
             //var tcs = new TaskCompletionSource<int>();
             //var process = new Process()
@@ -89,7 +89,7 @@ namespace LossyBotRewrite
             YoutubeClient youtube = new YoutubeClient();
             var manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
 
-            var streamInfo = manifest.GetAudioOnly().WithHighestBitrate();
+            var streamInfo = manifest.GetAudioOnlyStreams().GetWithHighestBitrate();
 
             if (streamInfo != null)
             {
@@ -109,14 +109,14 @@ namespace LossyBotRewrite
                 RedirectStandardOutput = true,
             });
         }
-        public void AddToQueue(Video video)
+        public void AddToQueue(IVideo video)
         {
             Queue.Enqueue(video);
         }
 
-        public void AddPlaylistToQueue(IEnumerable<Video> playlist)
+        public void AddPlaylistToQueue(IEnumerable<IVideo> playlist)
         {
-            foreach(Video video in playlist)
+            foreach(IVideo video in playlist)
             {
                 Queue.Enqueue(video);
             }

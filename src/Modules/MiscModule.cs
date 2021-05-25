@@ -12,6 +12,7 @@ using System.Linq;
 
 namespace LossyBotRewrite
 {
+    [Name("Misc")]
     public class MiscModule : ModuleBase<SocketCommandContext>
     {
         private readonly ImageService _service;

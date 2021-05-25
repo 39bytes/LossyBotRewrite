@@ -28,7 +28,7 @@ namespace LossyBotRewrite
             return activeVoiceServices.ContainsKey(guildId);
         }
 
-        public async Task CreateVoiceService(IVoiceChannel channel, Video video, IAudioClient audioClient)
+        public async Task CreateVoiceService(IVoiceChannel channel, IVideo video, IAudioClient audioClient)
         {
             var service = new VoiceService(_client, channel, channel.GuildId, audioClient);
             activeVoiceServices.Add(channel.GuildId, service);
@@ -39,7 +39,7 @@ namespace LossyBotRewrite
             DestroyVoiceService(channel.GuildId); //Then once the task completes destroy the service
         }
 
-        public async Task CreateVoiceService(IVoiceChannel channel, IEnumerable<Video> playlist, IAudioClient audioClient)
+        public async Task CreateVoiceService(IVoiceChannel channel, IEnumerable<IVideo> playlist, IAudioClient audioClient)
         {
             var service = new VoiceService(_client, channel, channel.GuildId, audioClient);
             activeVoiceServices.Add(channel.GuildId, service);
@@ -62,12 +62,12 @@ namespace LossyBotRewrite
             KillFFMpegProcess(guildId);
         }
 
-        public void AddVideoToServiceQueue(ulong guildId, Video video)
+        public void AddVideoToServiceQueue(ulong guildId, IVideo video)
         {
             activeVoiceServices[guildId].AddToQueue(video);
         }
 
-        public void AddPlaylistToServiceQueue(ulong guildId, IEnumerable<Video> playlist)
+        public void AddPlaylistToServiceQueue(ulong guildId, IEnumerable<IVideo> playlist)
         {
             activeVoiceServices[guildId].AddPlaylistToQueue(playlist);
         }
@@ -107,12 +107,12 @@ namespace LossyBotRewrite
             return activeVoiceServices[guildId].VoiceChannel.Id;
         }
 
-        public Video GetCurrentlyPlaying(ulong guildId)
+        public IVideo GetCurrentlyPlaying(ulong guildId)
         {
             return activeVoiceServices[guildId].CurrentlyPlaying;
         }
 
-        public Queue<Video> GetQueue(ulong guildId)
+        public Queue<IVideo> GetQueue(ulong guildId)
         {
             return activeVoiceServices[guildId].Queue;
         }

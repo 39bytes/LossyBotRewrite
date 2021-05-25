@@ -38,7 +38,7 @@ namespace LossyBotRewrite
 
             var client = new YoutubeClient();
             var info = await client.Videos.GetAsync(url);
-            if (info.Duration.Hours >= 1)
+            if (info.Duration.Value.Hours >= 1)
             {
                 await ReplyAsync("Video is too long! Keep it under 1 hour.");
                 return;
@@ -124,7 +124,7 @@ namespace LossyBotRewrite
                 await ReplyAsync("Enter a voice channel to use voice commands!");
                 return;
             }
-            Video playing = _voiceManager.GetCurrentlyPlaying(Context.Guild.Id);
+            IVideo playing = _voiceManager.GetCurrentlyPlaying(Context.Guild.Id);
             TimeSpan? uptime = _voiceManager.GetFFMpegUptime(Context.Guild.Id);
 
             if(!uptime.HasValue)
@@ -133,15 +133,15 @@ namespace LossyBotRewrite
                 return;
             }
 
-            int playPercent = (int)(100 * uptime.Value.TotalSeconds / playing.Duration.TotalSeconds);
+            int playPercent = (int)(100 * uptime.Value.TotalSeconds / playing.Duration.Value.TotalSeconds);
             string progressBar = new string('#', playPercent / 5) + new string('.', 20 - (playPercent / 5));
 
             string progress = uptime.Value.ToString(@"m\:ss"); 
-            string duration = playing.Duration.ToString(@"m\:ss"); 
+            string duration = playing.Duration.Value.ToString(@"m\:ss"); 
 
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle(":musical_note: Queue");
-            builder.WithThumbnailUrl(playing.Thumbnails.MediumResUrl);
+            builder.WithThumbnailUrl(playing.Thumbnails[1].Url);
             builder.AddField("Now Playing", $"**{playing.Title}**\n" +
                                             $"`{progressBar}`\n{progress} / {duration}\n" +
                                             $"By: {playing.Author}");
@@ -150,16 +150,16 @@ namespace LossyBotRewrite
 
             foreach (Video video in _voiceManager.GetQueue(Context.Guild.Id).Take(9)) //make it restricted to 10 total elements
             {
-                string s = video.Duration.ToString(@"m\:ss");
+                string s = video.Duration.Value.ToString(@"m\:ss");
                 builder.AddField($"**{video.Title}** ({s})", $"By: {video.Author}");
             }
 
             foreach(Video video in _voiceManager.GetQueue(Context.Guild.Id))
             {
-                totalLength += video.Duration;
+                totalLength += video.Duration.Value;
             }
 
-            totalLength += playing.Duration - uptime.Value; //Add the remaining time in the current song
+            totalLength += playing.Duration.Value - uptime.Value; //Add the remaining time in the current song
             string totalLengthStr = totalLength.ToString(@"hh\:mm\:ss");
             builder.WithFooter($"Queue length: {totalLengthStr}");
 
@@ -179,7 +179,7 @@ namespace LossyBotRewrite
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle(":musical_note: Added song to queue!");
             builder.AddField(video.Title, $"**By:** {video.Author}\n**Length:** {video.Duration.ToString().Substring(3)}");
-            builder.WithThumbnailUrl(video.Thumbnails.MediumResUrl);
+            builder.WithThumbnailUrl(video.Thumbnails[1].Url);
             return builder;
         }
 
@@ -188,7 +188,7 @@ namespace LossyBotRewrite
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle(":musical_note: Added playlist to queue!");
             builder.AddField(playlist.Title, $"**By:** {playlist.Author}\n");
-            builder.WithThumbnailUrl(playlist.Thumbnails.MediumResUrl);
+            builder.WithThumbnailUrl(playlist.Thumbnails[1].Url);
             return builder;
         }
     }

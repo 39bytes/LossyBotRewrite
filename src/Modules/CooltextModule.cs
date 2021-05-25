@@ -7,6 +7,7 @@ using Discord.Commands;
 
 namespace LossyBotRewrite
 {
+    [Name("Cooltext")]
     public class CooltextModule : ModuleBase<SocketCommandContext>
     {
         private readonly CooltextService _cooltextService;
