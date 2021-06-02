@@ -95,7 +95,6 @@ namespace LossyBotRewrite
             await _service.AddFnafSoundAsync(imageUrl, now);
             await Context.Channel.SendFileAsync($"{now}fnaf.mp4");
             File.Delete($"{now}fnaf.png");
-            File.Delete($"{now}temp.mp4");
             File.Delete($"{now}fnaf.mp4");
         }
 

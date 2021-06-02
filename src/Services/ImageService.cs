@@ -144,7 +144,7 @@ namespace LossyBotRewrite
             var processInfo = new ProcessStartInfo
             {
                 FileName = "ffmpeg",
-                Arguments = $"-loop 1 -y -i {now}fnaf.png -i {audioPath} -t 6 -vsync vfr {now}temp.mp4",
+                Arguments = $"-loop 1 -framerate 10 -i {now}fnaf.png -i {audioPath} -c:v libx264 -preset veryslow -crf 0 - c:a copy -shortest {now}fnaf.mp4",
                 UseShellExecute = true,
                 WindowStyle = ProcessWindowStyle.Hidden
             };
@@ -152,17 +152,6 @@ namespace LossyBotRewrite
             {
                 process.WaitForExit();
             }
-            //var thumbnailProcessInfo = new ProcessStartInfo
-            //{
-            //    FileName = "ffmpeg",
-            //    Arguments = $"-i {now}temp.mp4 -i {now}fnaf.png -map 1 -map 0 -c copy -disposition:0 attached_pic {now}fnaf.mp4",
-            //    UseShellExecute = true,
-            //    WindowStyle = ProcessWindowStyle.Hidden
-            //};
-            //using (var process = Process.Start(thumbnailProcessInfo))
-            //{
-            //    process.WaitForExit();
-            //}
         }
 
         public async Task<Stream> WriteToStream(IImageWrapper img)
