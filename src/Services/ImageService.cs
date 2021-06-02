@@ -144,7 +144,7 @@ namespace LossyBotRewrite
             var processInfo = new ProcessStartInfo
             {
                 FileName = "ffmpeg",
-                Arguments = $"-loop 1 -framerate 10 -i {now}fnaf.png -i {audioPath} -c:v libx264 -preset veryslow -crf 0 - c:a copy -shortest {now}fnaf.mp4",
+                Arguments = $"-loop 1 -framerate 10 -i {now}fnaf.png -i {audioPath} -c:v libx264 -preset veryslow -crf 0 -c:a copy -shortest {now}fnaf.mp4",
                 UseShellExecute = true,
                 WindowStyle = ProcessWindowStyle.Hidden
             };
