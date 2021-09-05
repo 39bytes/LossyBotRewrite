@@ -65,10 +65,22 @@ namespace LossyBotRewrite
                     }
                     return;
                 }
-
+                img.Write();
                 using (Stream stream = await _imageService.WriteToStream(img))
                 {
-                    await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
+                    try
+                    {
+                        await Context.Channel.SendFileAsync(stream, "lossyimage." + img.GetFormat().ToString().ToLower());
+                    }
+                    catch (Exception e)
+                    {
+                        await ReplyAsync(e.Message);
+                        if (img != null)
+                        {
+                            img.Dispose();
+                        }
+                        return;
+                    }
                 }
             }
         }

@@ -10,7 +10,7 @@
     <PackageReference Include="Discord.Net" Version="2.4.0" />
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.30" />
-    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="7.23.1" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="8.2.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />

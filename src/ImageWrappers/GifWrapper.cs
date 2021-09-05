@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace LossyBotRewrite
 {
+    //Wraps MagickImageCollection with applicable effects
     public class GifWrapper : IImageWrapper
     {
         public MagickImageCollection image;
@@ -19,10 +20,6 @@ namespace LossyBotRewrite
         public GifWrapper(byte[] data)
         {
             image = new MagickImageCollection(data);
-            for(int i = 0; i < image.Count; i++)
-            {
-                image[i].Quality = 50;
-            }
         }
 
         public GifWrapper(MagickImageCollection col)
@@ -100,6 +97,7 @@ namespace LossyBotRewrite
 
         public void Magik()
         {
+            image.Coalesce();
             for(int i = 0; i < image.Count; i++)
             {
                 image[i].LiquidRescale((Percentage)65, (Percentage)65);
@@ -153,14 +151,15 @@ namespace LossyBotRewrite
                     MaxFontPointsize = (topText.Length >= 20) ? 40 : 45
                 }
             };
-            
-            if(topText != "")
+
+            image.Coalesce();
+
+            if (topText != "")
             {
                 using (var top = new MagickImage($"caption:{topText}", readSettings))
                 {
                     for (int i = 0; i < image.Count; i++)
                     {
-                        image[i].Alpha(AlphaOption.Opaque);
                         image[i].Composite(top, 0, 0, CompositeOperator.Over);
                     }
                 }
@@ -177,8 +176,9 @@ namespace LossyBotRewrite
                     }
                 }
             }
+            image.Optimize();
+            image.OptimizeTransparency();
         }
-        #endregion
 
         public IImageWrapper Angry()
         {
@@ -293,6 +293,9 @@ namespace LossyBotRewrite
             }
             return this;
         }
+
+        #endregion
+
 
         public void Write(MemoryStream stream)
         {

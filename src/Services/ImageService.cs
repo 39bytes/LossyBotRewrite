@@ -117,6 +117,7 @@ namespace LossyBotRewrite
                 img.Write($"{now}.jpg", MagickFormat.Jpg);
             }
 
+            // magic numbers but whatever
             int topLeftX = (432 - width) / 2 + 24;
             int topLeftY = (243 - height) / 2 + 43;
 

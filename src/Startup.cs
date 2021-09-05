@@ -65,7 +65,6 @@ namespace LossyBotRewrite
             .AddSingleton<CompileService>()
             .AddSingleton<TimerService>()
             .AddSingleton<ImageService>()
-            .AddSingleton<CooltextService>()
             .AddSingleton<Random>()
             .AddSingleton(Configuration);
         }
